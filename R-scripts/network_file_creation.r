@@ -15,45 +15,28 @@ using("qusage", "plyr", "biomaRt", "data.table")
 
 ##### GO TERM NETWORK #####
 
-# load in GO term files
-GO1 <- read.table("./data-output/ann_GO0006915.txt", sep = "\t", header = T)
-GO2 <- read.table("./data-output/ann_GO0006954.txt", sep = "\t", header = T)
-GO3 <- read.table("./data-output/ann_GO0006974.txt", sep = "\t", header = T)
-GO4 <- read.table("./data-output/ann_GO0034599.txt", sep = "\t", header = T)
+# load in GO term files and clean the files to make them according edge tables
+path = paste0(getwd(), "/data-output")
+ls_GO <- list.files(path = path, pattern = "^ann_GO")
+for (i in 1:length(ls_GO)){assign(ls_GO[i], read.table(paste0(path,"/",ls_GO[i]), header = T, sep = "\t")[c("GO.TERM","entrezgene_id")])}
+ls_GO <- mget(ls(pattern = "ann_GO"))
+colnames <- c("source", "target") 
+ls_GO <- lapply(ls_GO, setNames, colnames)
 
-# create edge tables 
-GO1 <- GO1[c("GO.TERM","entrezgene_id")]
-colnames(GO1) <- c("source", "target")
-GO2 <- GO2[c("GO.TERM","entrezgene_id")]
-colnames(GO2) <- c("source", "target")
-GO3 <- GO3[c("GO.TERM","entrezgene_id")]
-colnames(GO3) <- c("source", "target")
-GO4 <- GO4[c("GO.TERM","entrezgene_id")]
-colnames(GO4) <- c("source", "target")
-
-# combine edge tables and make them character
-edges_GO_terms <- rbind(GO1, GO2, GO3, GO4)
+# combine edge tables of individual GO terms and make them overall character
+names(ls_GO) <- NULL
+edges_GO_terms <- do.call("rbind",ls_GO)
 edges_GO_terms[] <- lapply(edges_GO_terms, as.character)
 
-# create nodes file with type
+# create nodes file with type-annotation
 nodes_GO_terms <- unique(stack(edges_GO_terms))[-2]
 colnames(nodes_GO_terms) <- "id"
 nodes_GO_terms$type <- "Gene"
 nodes_GO_terms$type[nodes_GO_terms$id %like% "^GO:.*"] <- "Process"
 
-edges1 <- data.frame(lapply(GO1, as.character))
-edges2 <- data.frame(lapply(GO2, as.character))
-edges3 <- data.frame(lapply(GO3, as.character))
-edges4 <- data.frame(lapply(GO4, as.character))
-
 # save files
 write.table(edges_GO_terms, "./data-output/edges_GO_terms.txt", row.names = F, quote = F, sep = "\t")
 write.table(nodes_GO_terms, "./data-output/nodes_GO_terms.txt", row.names = F, quote = F, sep = "\t")
-
-write.table(edges1 , "./data-output/edges-GO0006915.txt", row.names=F, quote=F, sep="\t")
-write.table(edges2 , "./data-output/edges-GO0006954.txt", row.names=F, quote=F, sep="\t")
-write.table(edges3 , "./data-output/edges-GO0006974.txt", row.names=F, quote=F, sep="\t")
-write.table(edges4 , "./data-output/edges-GO0034599.txt", row.names=F, quote=F, sep="\t")
 
 ##### PATHWAY NETWORK #####
 
@@ -74,84 +57,88 @@ colnames(databases) <- c("pathway", "entrezgene")
 # load in genes file
 genes <- read.table("./data-output/ann_genes.txt", sep = "\t", header = T)
 
+# load selected pathways
+selectedpws <- as.data.frame(read.table("./data-output/selected_pws.txt", header = T, sep = "\t"))
+colnames(selectedpws) <- "ID"
+
 # load in selected pathways
-selectedpws1 <- as.data.frame(read.table("./data-output/results_ann_GO0006915.txt", header = T, sep = "\t")[,1])
-selectedpws2 <- as.data.frame(read.table("./data-output/results_ann_GO0006954.txt", header = T, sep = "\t")[,1])
-selectedpws3 <- as.data.frame(read.table("./data-output/results_ann_GO0006974.txt", header = T, sep = "\t")[,1])
-selectedpws4 <- as.data.frame(read.table("./data-output/results_ann_GO0034599.txt", header = T, sep = "\t")[,1])
+#selectedpws1 <- as.data.frame(read.table("./data-output/results_ann_GO0006915.txt", header = T, sep = "\t")[,1])
+#selectedpws2 <- as.data.frame(read.table("./data-output/results_ann_GO0006954.txt", header = T, sep = "\t")[,1])
+#selectedpws3 <- as.data.frame(read.table("./data-output/results_ann_GO0006974.txt", header = T, sep = "\t")[,1])
+#selectedpws4 <- as.data.frame(read.table("./data-output/results_ann_GO0034599.txt", header = T, sep = "\t")[,1])
 
-colnames(selectedpws1) <- "ID"
-colnames(selectedpws2) <- "ID"
-colnames(selectedpws3) <- "ID"
-colnames(selectedpws4) <- "ID"
+#colnames(selectedpws1) <- "ID"
+#colnames(selectedpws2) <- "ID"
+#colnames(selectedpws3) <- "ID"
+#colnames(selectedpws4) <- "ID"
 
-path = paste0(getwd(), "/data-output")
-res_GO <- list.files(path = path, pattern = "^results_ann_GO")
-for (i in 1:length(res_GO)){assign(res_GO[i], read.table(paste0(path,"/",res_GO[i]), header = T, sep = "\t"))}
-res_GO <- mget(ls(pattern = "^results_ann_GO"))
+#path = paste0(getwd(), "/data-output")
+#res_GO <- list.files(path = path, pattern = "^results_ann_GO")
+#for (i in 1:length(res_GO)){assign(res_GO[i], read.table(paste0(path,"/",res_GO[i]), header = T, sep = "\t"))}
+#res_GO <- mget(ls(pattern = "^results_ann_GO"))
 
-colnames <- c("ID")
-list2env(lapply(res_GO, setNames, colnames), .GlobalEnv)
+#colnames <- c("ID")
+#list2env(lapply(res_GO, setNames, colnames), .GlobalEnv)
 
 # edge table
 edge_table <- as.data.frame(databases[databases$pathway %in% selectedpws$ID,])
 
-edges1 <- as.data.frame(databases[databases$pathway %in% selectedpws1$ID,])
-edges2 <- as.data.frame(databases[databases$pathway %in% selectedpws2$ID,])
-edges3 <- as.data.frame(databases[databases$pathway %in% selectedpws3$ID,])
-edges4 <- as.data.frame(databases[databases$pathway %in% selectedpws4$ID,])
+#edges1 <- as.data.frame(databases[databases$pathway %in% selectedpws1$ID,])
+#edges2 <- as.data.frame(databases[databases$pathway %in% selectedpws2$ID,])
+#edges3 <- as.data.frame(databases[databases$pathway %in% selectedpws3$ID,])
+#edges4 <- as.data.frame(databases[databases$pathway %in% selectedpws4$ID,])
 
-ensembl <- useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl")
+#ensembl <- useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl")
 
-genes1 <- getBM(
-  attributes = c('hgnc_symbol', 'entrezgene_id'), 
-  filters = 'entrezgene_id',
-  values = edges1$entrezgene,
-  mart = ensembl
-)
-edges1$hgnc_symbol <- genes1$hgnc_symbol[match(edges1$entrezgene, genes1$entrezgene_id)]
-edges1 <- edges1[!is.na(edges1$hgnc_symbol),]
-edges1 <- edges1[-(edges1$hgnc_symbol == ""),]
+#genes1 <- getBM(
+#  attributes = c('hgnc_symbol', 'entrezgene_id'), 
+#  filters = 'entrezgene_id',
+#  values = edges1$entrezgene,
+#  mart = ensembl
+#)
+#edges1$hgnc_symbol <- genes1$hgnc_symbol[match(edges1$entrezgene, genes1$entrezgene_id)]
+#edges1 <- edges1[!is.na(edges1$hgnc_symbol),]
+#edges1 <- edges1[-(edges1$hgnc_symbol == ""),]
 
-genes2 <- getBM(
-  attributes = c('hgnc_symbol', 'entrezgene_id'), 
-  filters = 'entrezgene_id',
-  values = edges2$entrezgene,
-  mart = ensembl
-)
-edges2$hgnc_symbol <- genes2$hgnc_symbol[match(edges2$entrezgene, genes2$entrezgene_id)]
-edges2 <- edges2[!is.na(edges2$hgnc_symbol),]
-edges2 <- edges2[-(edges2$hgnc_symbol == ""),]
+#genes2 <- getBM(
+#  attributes = c('hgnc_symbol', 'entrezgene_id'), 
+#  filters = 'entrezgene_id',
+#  values = edges2$entrezgene,
+#  mart = ensembl
+#)
+#edges2$hgnc_symbol <- genes2$hgnc_symbol[match(edges2$entrezgene, genes2$entrezgene_id)]
+#edges2 <- edges2[!is.na(edges2$hgnc_symbol),]
+#edges2 <- edges2[-(edges2$hgnc_symbol == ""),]
 
-genes3 <- getBM(
-  attributes = c('hgnc_symbol', 'entrezgene_id'), 
-  filters = 'entrezgene_id',
-  values = edges3$entrezgene,
-  mart = ensembl
-)
-edges3$hgnc_symbol <- genes3$hgnc_symbol[match(edges3$entrezgene, genes3$entrezgene_id)]
-edges3 <- edges3[!is.na(edges3$hgnc_symbol),]
-edges3 <- edges3[-(edges3$hgnc_symbol == ""),]
+#genes3 <- getBM(
+#  attributes = c('hgnc_symbol', 'entrezgene_id'), 
+#  filters = 'entrezgene_id',
+#  values = edges3$entrezgene,
+#  mart = ensembl
+#)
+#edges3$hgnc_symbol <- genes3$hgnc_symbol[match(edges3$entrezgene, genes3$entrezgene_id)]
+#edges3 <- edges3[!is.na(edges3$hgnc_symbol),]
+#edges3 <- edges3[-(edges3$hgnc_symbol == ""),]
 
-genes4 <- getBM(
-  attributes = c('hgnc_symbol', 'entrezgene_id'), 
-  filters = 'entrezgene_id',
-  values = edges4$entrezgene,
-  mart = ensembl
-)
-edges4$hgnc_symbol <- genes4$hgnc_symbol[match(edges4$entrezgene, genes4$entrezgene_id)]
-edges4 <- edges4[!is.na(edges4$hgnc_symbol),]
-edges4 <- edges4[-(edges4$hgnc_symbol == ""),]
+#genes4 <- getBM(
+#  attributes = c('hgnc_symbol', 'entrezgene_id'), 
+#  filters = 'entrezgene_id',
+#  values = edges4$entrezgene,
+#  mart = ensembl
+#)
+#edges4$hgnc_symbol <- genes4$hgnc_symbol[match(edges4$entrezgene, genes4$entrezgene_id)]
+#edges4 <- edges4[!is.na(edges4$hgnc_symbol),]
+#edges4 <- edges4[-(edges4$hgnc_symbol == ""),]
 
-edges1 <- unique(edges1)
-edges2 <- unique(edges2)
-edges3 <- unique(edges3)
-edges4 <- unique(edges4)
+#edges1 <- unique(edges1)
+#edges2 <- unique(edges2)
+#edges3 <- unique(edges3)
+#edges4 <- unique(edges4)
 
-write.table(edges1 , "./data-output/edges-GO0006915-pw.txt", row.names=F, quote=F, sep="\t")
-write.table(edges2 , "./data-output/edges-GO0006954-pw.txt", row.names=F, quote=F, sep="\t")
-write.table(edges3 , "./data-output/edges-GO0006974-pw.txt", row.names=F, quote=F, sep="\t")
-write.table(edges4 , "./data-output/edges-GO0034599-pw.txt", row.names=F, quote=F, sep="\t")
+#write.table(edges1 , "./data-output/edges-GO0006915-pw.txt", row.names=F, quote=F, sep="\t")
+#write.table(edges2 , "./data-output/edges-GO0006954-pw.txt", row.names=F, quote=F, sep="\t")
+#write.table(edges3 , "./data-output/edges-GO0006974-pw.txt", row.names=F, quote=F, sep="\t")
+#write.table(edges4 , "./data-output/edges-GO0034599-pw.txt", row.names=F, quote=F, sep="\t")
 
 # only unique rows
 edge_table <- unique(edge_table)
@@ -225,7 +212,7 @@ write.table(nodes_hgnc, "./data-output/nodes_hgnc.txt", col.names = T, row.names
 sessionInfo()
 
 
-==##### SIGNIFICANT PATHWAYS #####
+##### SIGNIFICANT PATHWAYS #####
 sigPWs <- read.table("./data-output/GSEA/sig_pws.txt", header = T, sep = "\t")
 sigPWs$unique.sigPWs.ID. <- as.character(sigPWs$unique.sigPWs.ID.)
 edge_table <- as.data.frame(databases[databases$pathway %in% sigPWs[,1],])
