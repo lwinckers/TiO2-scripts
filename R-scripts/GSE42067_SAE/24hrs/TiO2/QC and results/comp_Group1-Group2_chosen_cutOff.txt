@@ -1,0 +1,1 @@
+ENSG_ID	logFC>= 2	Fold.Change	AveExpr>= 5	t	P.Value<= 0.05	adj.P.Val	B
