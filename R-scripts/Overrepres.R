@@ -35,7 +35,7 @@ databases$entrezgene <- as.numeric(databases$entrezgene)
 
 # enricher
 for (i in 1:length(ls_GO)){
-res <- as.data.frame(enricher(gene = ls_GO[[i]], minGSSize = 400, TERM2GENE = databases, pvalueCutoff = 0.05))
+res <- as.data.frame(enricher(gene = ls_GO[[i]], minGSSize = 1, TERM2GENE = databases, pvalueCutoff = 0.05))
 res$GOterm <- names(ls_GO[i])
 assign(paste0("result_", names(ls_GO[i])), as.data.frame(res))
 write.table(as.data.frame(res), paste0("./data-output/results_", names(ls_GO[i])), quote = F, sep = "\t", row.names = F)
