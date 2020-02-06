@@ -4,14 +4,14 @@
 
 # clean work space
 rm(list=ls())
+options(stringsAsFactors = F)
 
 # set working directory to where script is saved
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
 
 # install packages 
-source("./functions/autoInstallPackages.R")
-using("RCy3")
+library(RCy3)
 
 # check if cytoscape is open and check version
 cytoscapePing()
