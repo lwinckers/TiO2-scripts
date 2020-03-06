@@ -35,7 +35,7 @@ GO_annotation(fileName = paste0("ann_", names(ls_GO[i])), data = ls_GO[[i]], val
 
 # load in annotated files
 path = paste0(getwd(), "/data-output")
-ls_GO <- list.files(path = path, pattern = "ann_GO00")
+ls_GO <- list.files(path = path, pattern = "^ann_GO00")
 for (i in 1:length(ls_GO)){assign(ls_GO[i], read.table(paste0(path,"/",ls_GO[i]), header = T, sep = "\t")[c("GO.TERM", "entrezgene_id")])}
 
 # combine all genes from GO terms
