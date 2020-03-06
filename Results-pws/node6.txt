@@ -1,0 +1,108 @@
+ID	type
+REACTOME NEUTROPHIL DEGRANULATION	Pathway
+REACTOME UNWINDING OF DNA	Pathway
+NRF2 ARE regulation WikiPathways 20190910 WP4357 Homo sapiens	Pathway
+REACTOME TNFR2 NON CANONICAL NF KB PATHWAY	Pathway
+TNF alpha Signaling Pathway WikiPathways 20190910 WP231 Homo sapiens	Pathway
+Resistin as a regulator of inflammation WikiPathways 20190910 WP4481 Homo sapiens	Pathway
+Cytokines and Inflammatory Response WikiPathways 20190910 WP530 Homo sapiens	Pathway
+EBV LMP1 signaling WikiPathways 20190910 WP262 Homo sapiens	Pathway
+KEGG DNA REPLICATION	Pathway
+REACTOME DNA STRAND ELONGATION	Pathway
+REACTOME OVARIAN TUMOR DOMAIN PROTEASES	Pathway
+Cell Cycle WikiPathways 20190910 WP179 Homo sapiens	Pathway
+GO:0006915	Pathway
+NRF2 pathway WikiPathways 20190910 WP2884 Homo sapiens	Pathway
+Senescence and Autophagy in Cancer WikiPathways 20190910 WP615 Homo sapiens	Pathway
+Apoptosis WikiPathways 20190910 WP254 Homo sapiens	Pathway
+miRNAs involvement in the immune response in sepsis WikiPathways 20190910 WP4329 Homo sapiens	Pathway
+REACTOME ACTIVATION OF ATR IN RESPONSE TO REPLICATION STRESS	Pathway
+REACTOME NOD1 2 SIGNALING PATHWAY	Pathway
+KEGG TOLL LIKE RECEPTOR SIGNALING PATHWAY	Pathway
+Small cell lung cancer WikiPathways 20190910 WP4658 Homo sapiens	Pathway
+Toll like Receptor Signaling Pathway WikiPathways 20190910 WP75 Homo sapiens	Pathway
+Photodynamic therapy induced NF kB survival signaling WikiPathways 20190910 WP3617 Homo sapiens	Pathway
+REACTOME ACTIVATION OF THE PRE REPLICATIVE COMPLEX	Pathway
+Ferroptosis WikiPathways 20190910 WP4313 Homo sapiens	Pathway
+Signal transduction through IL1R WikiPathways 20190910 WP4496 Homo sapiens	Pathway
+Oligodendrocyte Specification and differentiation including remyelination   leading to Myelin Components for CNS WikiPathways 20190910 WP4304 Homo sapiens	Pathway
+REACTOME DNA REPLICATION	Pathway
+REACTOME TNFR1 INDUCED NFKAPPAB SIGNALING PATHWAY	Pathway
+TLR4 Signaling and Tolerance WikiPathways 20190910 WP3851 Homo sapiens	Pathway
+KEGG CELL CYCLE	Pathway
+Phytochemical activity on NRF2 transcriptional activation WikiPathways 20190910 WP3 Homo sapiens	Pathway
+RANKL RANK  Receptor activator of NFKB  ligand   Signaling Pathway WikiPathways 20190910 WP2018 Homo sapiens	Pathway
+TGF beta Receptor Signaling WikiPathways 20190910 WP560 Homo sapiens	Pathway
+IL 1 signaling pathway WikiPathways 20190910 WP195 Homo sapiens	Pathway
+Cytosolic DNA sensing pathway WikiPathways 20190910 WP4655 Homo sapiens	Pathway
+Folate Metabolism WikiPathways 20190910 WP176 Homo sapiens	Pathway
+KEGG EPITHELIAL CELL SIGNALING IN HELICOBACTER PYLORI INFECTION	Pathway
+KEGG NOD LIKE RECEPTOR SIGNALING PATHWAY	Pathway
+Lung fibrosis WikiPathways 20190910 WP3624 Homo sapiens	Pathway
+Novel intracellular components of RIG I like receptor  RLR  pathway WikiPathways 20190910 WP3865 Homo sapiens	Pathway
+REACTOME G2 M CHECKPOINTS	Pathway
+REACTOME PEPTIDE LIGAND BINDING RECEPTORS	Pathway
+REACTOME REGULATION OF TNFR1 SIGNALING	Pathway
+GO:0006974	Pathway
+REACTOME DDX58 IFIH1 MEDIATED INDUCTION OF INTERFERON ALPHA BETA	Pathway
+Regulation of toll like receptor signaling pathway WikiPathways 20190910 WP1449 Homo sapiens	Pathway
+KEGG CHEMOKINE SIGNALING PATHWAY	Pathway
+REACTOME ZBP1 DAI MEDIATED INDUCTION OF TYPE I IFNS	Pathway
+Selenium Micronutrient Network WikiPathways 20190910 WP15 Homo sapiens	Pathway
+Hepatitis B infection WikiPathways 20190910 WP4666 Homo sapiens	Pathway
+KEGG RIG I LIKE RECEPTOR SIGNALING PATHWAY	Pathway
+REACTOME S PHASE	Pathway
+REACTOME MITOTIC G1 G1 S PHASES	Pathway
+TNF related weak inducer of apoptosis  TWEAK  Signaling Pathway WikiPathways 20190910 WP2036 Homo sapiens	Pathway
+DNA Replication WikiPathways 20190910 WP466 Homo sapiens	Pathway
+Vitamin B12 Metabolism WikiPathways 20190910 WP1533 Homo sapiens	Pathway
+Aryl Hydrocarbon Receptor WikiPathways 20190910 WP2586 Homo sapiens	Pathway
+KEGG CYTOSOLIC DNA SENSING PATHWAY	Pathway
+REACTOME CHEMOKINE RECEPTORS BIND CHEMOKINES	Pathway
+REACTOME INTERLEUKIN 10 SIGNALING	Pathway
+GO:0006954	Pathway
+GO:0034599	Pathway
+REACTOME G ALPHA I SIGNALLING EVENTS	Pathway
+REACTOME CELL CYCLE CHECKPOINTS	Pathway
+KEGG CYTOKINE CYTOKINE RECEPTOR INTERACTION	Pathway
+Nuclear Receptors Meta Pathway WikiPathways 20190910 WP2882 Homo sapiens	Pathway
+REACTOME REGULATION OF INSULIN LIKE GROWTH FACTOR IGF TRANSPORT AND UPTAKE BY INSULIN LIKE GROWTH FACTOR BINDING PROTEINS IGFBPS	Pathway
+REACTOME INTERLEUKIN 1 SIGNALING	Pathway
+KEGG SMALL CELL LUNG CANCER	Pathway
+REACTOME TAK1 ACTIVATES NFKB BY PHOSPHORYLATION AND ACTIVATION OF IKKS COMPLEX	Pathway
+Spinal Cord Injury WikiPathways 20190910 WP2431 Homo sapiens	Pathway
+Osteoclast Signaling WikiPathways 20190910 WP12 Homo sapiens	Pathway
+Toll like Receptor Signaling WikiPathways 20190910 WP3858 Homo sapiens	Pathway
+REACTOME P75NTR SIGNALS VIA NF KB	Pathway
+REACTOME RIP MEDIATED NFKB ACTIVATION VIA ZBP1	Pathway
+Fibrin Complement Receptor 3 Signaling Pathway WikiPathways 20190910 WP4136 Homo sapiens	Pathway
+REACTOME TRAF6 MEDIATED NF KB ACTIVATION	Pathway
+KEGG ADIPOCYTOKINE SIGNALING PATHWAY	Pathway
+REACTOME TELOMERE C STRAND LAGGING STRAND SYNTHESIS	Pathway
+REACTOME TNF SIGNALING	Pathway
+REACTOME DEUBIQUITINATION	Pathway
+REACTOME CLASS A 1 RHODOPSIN LIKE RECEPTORS	Pathway
+Primary Focal Segmental Glomerulosclerosis FSGS WikiPathways 20190910 WP2572 Homo sapiens	Pathway
+REACTOME NF KB IS ACTIVATED AND SIGNALS SURVIVAL	Pathway
+Photodynamic therapy induced NFE2L2  NRF2  survival signaling WikiPathways 20190910 WP3612 Homo sapiens	Pathway
+Retinoblastoma Gene in Cancer WikiPathways 20190910 WP2446 Homo sapiens	Pathway
+REACTOME CYCLIN A B1 B2 ASSOCIATED EVENTS DURING G2 M TRANSITION	Pathway
+REACTOME DEATH RECEPTOR SIGNALLING	Pathway
+REACTOME INTERFERON ALPHA BETA SIGNALING	Pathway
+Non genomic actions of 1 25 dihydroxyvitamin D3 WikiPathways 20190910 WP4341 Homo sapiens	Pathway
+REACTOME GAP FILLING DNA REPAIR SYNTHESIS AND LIGATION IN GG NER	Pathway
+REACTOME DNA DOUBLE STRAND BREAK REPAIR	Pathway
+REACTOME INTERFERON SIGNALING	Pathway
+REACTOME TRANSCRIPTIONAL REGULATION BY TP53	Pathway
+KEGG REGULATION OF ACTIN CYTOSKELETON	Pathway
+REACTOME RESPONSE TO ELEVATED PLATELET CYTOSOLIC CA2PLUS	Pathway
+Apoptosis Modulation and Signaling WikiPathways 20190910 WP1772 Homo sapiens	Pathway
+REACTOME PROCESSING OF DNA DOUBLE STRAND BREAK ENDS	Pathway
+REACTOME INTERFERON GAMMA SIGNALING	Pathway
+Vitamin D in inflammatory diseases WikiPathways 20190910 WP4482 Homo sapiens	Pathway
+REACTOME INTERLEUKIN 1 FAMILY SIGNALING	Pathway
+REACTOME TOLL LIKE RECEPTOR CASCADES	Pathway
+Apoptosis related network due to altered Notch3 in ovarian cancer WikiPathways 20190910 WP2864 Homo sapiens	Pathway
+Chromosomal and microsatellite instability in colorectal cancer  WikiPathways 20190910 WP4216 Homo sapiens	Pathway
+Overview of nanoparticle effects WikiPathways 20190910 WP3287 Homo sapiens	Pathway
+REACTOME GPCR LIGAND BINDING	Pathway

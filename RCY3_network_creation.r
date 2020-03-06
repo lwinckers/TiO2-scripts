@@ -42,13 +42,13 @@ nodeTable <- getTableColumns(table = "node")
 head(nodeTable)
 
 # create heatmaps of data for respective nodes
-setNodeCustomHeatMapChart(c("TiO2_24hrs_10_Caco2.logFC","TiO2_24hrs_10_SAE.logFC",
-                            "TiO2_24hrs_10_THP1.logFC"), 
+setNodeCustomHeatMapChart(c("TiO2_24hrs_10_Caco2-logFC","TiO2_24hrs_10_SAE-logFC",
+                            "TiO2_24hrs_10_THP1-logFC"), 
                           slot = 1, range = c(-0.26, 0.26))
 setNodeCustomPosition(nodeAnchor = "N", graphicAnchor = "S", slot = 1)
 
-setNodeCustomHeatMapChart(c("TiO2_24hrs_100_Caco2.logFC","TiO2_24hrs_100_SAE.logFC",
-                            "TiO2_24hrs_100_THP1.logFC"), 
+setNodeCustomHeatMapChart(c("TiO2_24hrs_100_Caco2-logFC","TiO2_24hrs_100_SAE-logFC",
+                            "TiO2_24hrs_100_THP1-logFC"), 
                           slot = 2, range = c(-0.26, 0.26))
 setNodeCustomPosition(nodeAnchor = "S", graphicAnchor = "N", slot = 2)
 
@@ -65,12 +65,12 @@ setNodeBorderWidthDefault(new.width = 7)
 setNodeColorDefault(new.color = "#FFFFFF")
 
 # create subnetwork based on only significant genes in at least one of the datasets
-createColumnFilter(filter.name = "sig genes1", column = "TiO2_24hrs_10_Caco2.P.Value", 0.05, "LESS_THAN")
-createColumnFilter(filter.name = "sig genes2", column = "TiO2_24hrs_100_Caco2.P.Value", 0.05, "LESS_THAN")
-createColumnFilter(filter.name = "sig genes3", column = "TiO2_24hrs_10_THP1.P.Value", 0.05, "LESS_THAN")
-createColumnFilter(filter.name = "sig genes4", column = "TiO2_24hrs_100_THP1.P.Value", 0.05, "LESS_THAN")
-createColumnFilter(filter.name = "sig genes5", column = "TiO2_24hrs_10_SAE.P.Value", 0.05, "LESS_THAN")
-createColumnFilter(filter.name = "sig genes6", column = "TiO2_24hrs_100_SAE.P.Value", 0.05, "LESS_THAN")
+createColumnFilter(filter.name = "sig genes1", column = "TiO2_24hrs_10_Caco2-P.Value", 0.05, "LESS_THAN")
+createColumnFilter(filter.name = "sig genes2", column = "TiO2_24hrs_100_Caco2-P.Value", 0.05, "LESS_THAN")
+createColumnFilter(filter.name = "sig genes3", column = "TiO2_24hrs_10_THP1-P.Value", 0.05, "LESS_THAN")
+createColumnFilter(filter.name = "sig genes4", column = "TiO2_24hrs_100_THP1-P.Value", 0.05, "LESS_THAN")
+createColumnFilter(filter.name = "sig genes5", column = "TiO2_24hrs_10_SAE-P.Value", 0.05, "LESS_THAN")
+createColumnFilter(filter.name = "sig genes6", column = "TiO2_24hrs_100_SAE-P.Value", 0.05, "LESS_THAN")
 
 sigexpr <- createCompositeFilter('combined filter', filter.list = c("sig genes1", "sig genes2",
                                                                     "sig genes3", "sig genes4",
