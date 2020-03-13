@@ -10,8 +10,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
 
 # install packages 
-source("./functions/autoInstallPackages.R")
-using("biomaRt")
+library(biomaRt)
 
 # Caco2
 caco2_low <- read.table("./data-input/TiO2_24hrs_10_Caco2.txt", sep = "\t", header = T)
@@ -26,27 +25,28 @@ THP1_high <- read.table("./data-input/TiO2_24hrs_100_THP1.txt", sep = "\t", head
 ##### CLEAN DATA FRAMES #####
 
 # Caco2
-caco2_low <- caco2_low[c(1,2,6)]
-caco2_high <- caco2_high[c(1,2,6)]
+caco2_low <- caco2_low[c(1,2,3,6)]
+caco2_high <- caco2_high[c(1,2,3,6)]
 # SAE
-SAE_low <- SAE_low[c(1,2,6)]
-SAE_high <- SAE_high[c(1,2,6)]
+SAE_low <- SAE_low[c(1,2,3,6)]
+SAE_high <- SAE_high[c(1,2,3,6)]
 # THP1
-THP1_low <- THP1_low[c(1,2,6)]
-THP1_high <- THP1_high[c(1,2,6)]
+THP1_low <- THP1_low[c(1,2,3,6)]
+THP1_high <- THP1_high[c(1,2,3,6)]
 
 # Caco2
-colnames(caco2_low)[c(2,3)] <- c(paste0(substring(list.files()[1], first = 1, last = 19),"-",colnames(caco2_low)[2]), paste0(substring(list.files()[1], first = 1, last = 19),"-",colnames(caco2_low)[3]))
-colnames(caco2_high)[c(2,3)] <- c(paste0(substring(list.files()[4], first = 1, last = 20),"-",colnames(caco2_high)[2]), paste0(substring(list.files()[4], first = 1, last = 20),"-",colnames(caco2_high)[3]))
+colnames(caco2_low)[c(2,3,4)] <- c("caco2_L_logFC", "caco2_L_FC", "caco2_L_pval")
+colnames(caco2_high)[c(2,3,4)] <- c("caco2_H_logFC", "caco2_H_FC", "caco2_H_pval")
 # SAE
-colnames(SAE_low)[c(2,3)] <- c(paste0(substring(list.files()[2], first = 1, last = 17),"-",colnames(SAE_low)[2]), paste0(substring(list.files()[2], first = 1, last = 17),"-",colnames(SAE_low)[3]))
-colnames(SAE_high)[c(2,3)] <- c(paste0(substring(list.files()[5], first = 1, last = 18),"-",colnames(SAE_high)[2]), paste0(substring(list.files()[5], first = 1, last = 18),"-",colnames(SAE_high)[3]))
+colnames(SAE_low)[c(2,3,4)] <- c("SAE_L_logFC", "SAE_L_FC", "SAE_L_pval")
+colnames(SAE_high)[c(2,3,4)] <- c("SAE_H_logFC", "SAE_H_FC", "SAE_H_pval")
 # THP1
-colnames(THP1_low)[c(2,3)] <- c(paste0(substring(list.files()[3], first = 1, last = 18),"-",colnames(THP1_low)[2]), paste0(substring(list.files()[3], first = 1, last = 18),"-",colnames(THP1_low)[3]))
-colnames(THP1_high)[c(2,3)] <- c(paste0(substring(list.files()[6], first = 1, last = 19),"-",colnames(THP1_high)[2]), paste0(substring(list.files()[6], first = 1, last = 19),"-",colnames(THP1_high)[3]))
+colnames(THP1_low)[c(2,3,4)] <- c("THP1_L_logFC", "THP1_L_FC", "THP1_L_pval")
+colnames(THP1_high)[c(2,3,4)] <- c("THP1_H_logFC", "THP1_H_FC", "THP1_H_pval")
 
 ##### GENE ID ANNOTATION #####
 
+# select ensembl IDs from one of the datasets
 ids <- as.data.frame(caco2_low$ENSG_ID)
 colnames(ids) <- "ENSG_ID"
 
