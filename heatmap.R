@@ -10,8 +10,9 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
 
 # install packages 
-source("./functions/autoInstallPackages.R")
-using("pheatmap", "colorRamps", "RColorBrewer")
+library(pheatmap)
+library(colorRamps)
+library(RColorBrewer)
 
 # load necessary files
 for (i in 1:length(list.files(path="./data-output/GSEA",pattern="GSEA"))){ 
