@@ -60,15 +60,18 @@ genes <- getBM(
   mart = ensembl
 )
 
-# check which ENSG ids are not mapped
-mismatch <- as.data.frame(caco2_low$ENSG_ID[!(caco2_low$ENSG_ID %in% genes$ensembl_gene_id)])
-colnames(mismatch) <- "mismatch"
-mismatch <- as.data.frame(mismatch[grepl("ENSG.*", mismatch$mismatch),])
+# remove NAs from gene file
+## 11324
+genes2 <- genes[!(is.na(genes$entrezgene_id)),]
+# remove rows without HGNC-symbol
+## 11298
+genes3 <- genes2[-which(genes2$hgnc_symbol == ""),]
 
 ##### CLEAN DATA FRAMES 2 AND SAVE #####
 
-colnames(genes)[1] <- "ENSG_ID"
-bound <- merge(genes, caco2_low, by = "ENSG_ID")
+# merge datasets with annotated gene identifiers
+colnames(genes3)[1] <- "ENSG_ID"
+bound <- merge(genes3, caco2_low, by = "ENSG_ID")
 bound <- merge(bound, caco2_high, by = "ENSG_ID")
 bound <- merge(bound, SAE_low, by = "ENSG_ID")
 bound <- merge(bound, SAE_high, by = "ENSG_ID")
