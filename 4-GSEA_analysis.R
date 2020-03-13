@@ -101,6 +101,7 @@ for(i in 4:9) {
 
 GSEAan(GENESET = genesets, fileName = "testGSEA")
 
+# test
 dat <- as.numeric(data[,4])
 names(dat) <- as.character(data[,3])
 dat <- sort(dat, decreasing = T)

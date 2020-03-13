@@ -78,12 +78,10 @@ bound <- merge(bound, SAE_high, by = "ENSG_ID")
 bound <- merge(bound, THP1_low, by = "ENSG_ID")
 bound <- merge(bound, THP1_high, by = "ENSG_ID")
 
-caco2 <- bound[,c(1:7)]
-colnames(caco2)[c(4:7)] <- c("low-logFC", "low-P.Value", "high-logFC", "high-P.Value")
-SAE <- bound[,c(1:3,8:11)]
-colnames(SAE)[c(4:7)] <- c("low-logFC", "low-P.Value", "high-logFC", "high-P.Value")
-THP1 <- bound[,c(1:3,12:15)]
-colnames(THP1)[c(4:7)] <- c("low-logFC", "low-P.Value", "high-logFC", "high-P.Value")
+# create seperate files for each cell line
+caco2 <- bound[,c(1:9)]
+SAE <- bound[,c(1:3,10:15)]
+THP1 <- bound[,c(1:3,16:21)]
 
 write.table(bound, "./data-output/merged_TiO2.txt", sep = "\t", quote = F, row.names = F)
 write.table(caco2, "./data-output/merged_caco2.txt", sep = "\t", quote = F, row.names = F)
