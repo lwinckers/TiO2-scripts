@@ -80,6 +80,9 @@ options(stringsAsFactors = F)
 library(clusterProfiler)
 library(dplyr)
 
+### link to GSEA analysis function
+source("./functions/GSEA.R")
+
 ### load gene-expression file with specific ranked score
 data <- read.table("./data-output/ranked_TiO2.txt", header = T, sep ="\t")
 

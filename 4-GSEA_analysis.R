@@ -94,7 +94,7 @@ data_rnk <- data_rnk %>% mutate(THP1_H_rnk = THP1_H_FC * -log10(THP1_H_pval))
 data_rnk <- data_rnk[c(1,2,3,(grep("_rnk", names(data_rnk))))]
 
 # extract data 1
-GSEAan <- function(GENESET, fileName){
+GSEAanalysis <- function(GENESET, fileName){
 for(i in 4:9) {
   dat <- as.numeric(data_rnk[,i])
   names(dat) <- as.character(data_rnk[,3])
@@ -109,7 +109,7 @@ for(i in 4:9) {
               row.names = F)
 }}
 
-GSEAan(GENESET = genesets, fileName = "GSEA")
+GSEAanalysis(GENESET = genesets, fileName = "GSEA")
 
 # test
 dat <- as.numeric(data[,4])
