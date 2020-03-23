@@ -3,8 +3,6 @@
 ## Script name: workflow.R
 ##
 ## Purpose of script: Takes one gene list for a process, finds relevant pathways and runs enrichment analysis (using transcriptomics data) to study how process is affected in dataset
-## Dataset: 
-## Pathway collections:
 ##
 ## Author: Laurent Winckers, Martina Kutmon
 ##
@@ -14,9 +12,7 @@
 ## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
 ## Running under: Windows 10 x64 (build 17763)
-## Packages: readxl_1.3.1, rstudioapi_0.11, RColorBrewer_1.1-2, RCy3_2.6.3
-##
-## Cytoscape version 3.7.2
+## Packages: 
 ##
 ## ---------------------------
 
@@ -64,7 +60,37 @@ res <- as.data.frame(enricher(gene = goterm, minGSSize = 10, TERM2GENE = databas
 ### save result
 resName <- "GO0006915"
 
-write.table(res , paste0("./data-output/enricher_", resName), quote = F, sep = "\t", row.names = F)
+write.table(res_pw , paste0("./data-output/res_enricher_", resName), quote = F, sep = "\t", row.names = F)
+
+## ---------------------------
+
+### select enriched pathways from combined pathway databases file
+res_pw <- as.data.frame(databases[databases$pathway %in% res$ID,])
+
+### select only unique rows
+res_pw <- unique(res_pw)
+
+### map entrezgene IDs to hgnc symbols
+ensembl <- useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl", mirror = "useast")
+
+genes <- getBM(
+  attributes = c('hgnc_symbol', 'entrezgene_id'), 
+  filters = 'entrezgene_id',
+  values = edge_table$entrezgene,
+  mart = ensembl
+)
+
+### merge edge table with hgnc symbols
+res_pw$hgnc_symbol <- genes$hgnc_symbol[match(res_pw$entrezgene, genes$entrezgene)]
+
+### remove NAs and empty values as they are pseudogenes, microRNAs or discontinued genes
+res_pw <- res_pw[!is.na(res_pw$hgnc_symbol),]
+res_pw <- res_pw[-(res_pw$hgnc_symbol == ""),]
+
+### save result
+resName <- "GO0006915"
+
+write.table(res_pw , paste0("./data-output/enriched_", resName), quote = F, sep = "\t", row.names = F)
 
 ## ---------------------------
 
@@ -87,7 +113,9 @@ source("./functions/GSEA.R")
 data <- read.table("./data-output/ranked_TiO2.txt", header = T, sep ="\t")
 
 ### load geneset
-geneset <- read.table("./data-output/", header = T, sep = "t")
+fileName <- "enriched_"
+
+geneset <- read.table(paste0("./data-output/", fileName), header = T, sep = "t")
 
 ### perform GSEA analysis
 GSEAan(GENESET = geneset, fileName = "")
