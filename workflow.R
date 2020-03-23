@@ -27,24 +27,67 @@
 
 ## ---------------------------
 
-# Step 1: Pathway selection
+# Step 1: Data import and pre-processing
+# Read data file (describe how data needs to look like)
+# Data pre-processing if needed
+# Define number of experiments/comparisons
+
+
+## ---------------------------
+
+# Step 2: Pathway selection
 # Read process gene list
 # Read pathway gene set collections
 # Run overrepresentation analysis
 # Create gene set with all selected pathways
 
-## ---------------------------
+### set up environment
+rm(list=ls())
+options(stringsAsFactors = F)
 
-# Step 2: Data import and pre-processing
-# Read data file (describe how data needs to look like)
-# Data pre-processing if needed
-# Define number of experiments/comparisons
+### load libraries
+library(clusterProfiler)
+library(qusage)
+library(plyr)
+
+### load in gene GO-term genelist
+fileName <- "ann_GO0006915.txt"
+
+goterm <- read.table(paste0("./data-output/", fileName), header = T, sep ="\t")
+
+### load in pathway databases file
+databases <- read.table("./data-output/pw_databases.txt", header = T, sep ="\t")
+
+### perform enricher analysis
+res <- as.data.frame(enricher(gene = goterm, minGSSize = 10, TERM2GENE = databases, pvalueCutoff = 1))
+
+### save result
+resName <- "GO0006915"
+
+write.table(res , paste0("./data-output/enricher_", resName), quote = F, sep = "\t", row.names = F)
 
 ## ---------------------------
 
 # Step 3: GSEA 
 # Run GSEA per comparison with selected gene set collection
 # Select significant results in at least one comparison
+
+### set up environment
+rm(list=ls())
+options(stringsAsFactors = F)
+
+### load libraries
+library(clusterProfiler)
+library(dplyr)
+
+### load gene-expression file with specific ranked score
+data <- read.table("./data-output/ranked_TiO2.txt", header = T, sep ="\t")
+
+### load geneset
+geneset <- read.table("./data-output/", header = T, sep = "t")
+
+### perform GSEA analysis
+GSEAan(GENESET = geneset, fileName = "")
 
 ## ---------------------------
 
