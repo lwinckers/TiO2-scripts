@@ -6,13 +6,13 @@
 ##
 ## Author: Laurent Winckers, Martina Kutmon
 ##
-## Date Created: xxxx-xx-xx
+## Date Created: 2020-03-24
 ##
 ## Session info:
 ## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
 ## Running under: Windows 10 x64 (build 17763)
-## Packages: 
+## Packages: clusterProfiler_3.14.3, plyr_1.8.6, biomaRt_2.42.0, dplyr_0.8.5, data.table_1.12.8 
 ##
 ## ---------------------------
 
@@ -40,32 +40,38 @@
 ### set up environment
 rm(list=ls())
 options(stringsAsFactors = F)
+gc()
+
+### set working directroy
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
 
 ### load libraries
 library(clusterProfiler)
-library(qusage)
 library(plyr)
+library(biomaRt)
 
 ### load in gene GO-term genelist
-fileName <- "ann_GO0006915.txt"
+fileName <- "GO0034599"
 
-goterm <- read.table(paste0("./data-output/", fileName), header = T, sep ="\t")
+goterm <- read.table(paste0("./data-output/ann_", fileName ,".txt"), header = T, sep ="\t")
 
 ### load in pathway databases file
 databases <- read.table("./data-output/pw_databases.txt", header = T, sep ="\t")
 
 ### perform enricher analysis
-res <- as.data.frame(enricher(gene = goterm, minGSSize = 10, TERM2GENE = databases, pvalueCutoff = 1))
+res_enr <- as.data.frame(enricher(gene = goterm$entrezgene_id, TERM2GENE = databases,
+                              minGSSize = 10, maxGSSize = 500, 
+                              pAdjustMethod = "BH",
+                              pvalueCutoff = 0.05, qvalueCutoff = 0.05))
 
 ### save result
-resName <- "GO0006915"
-
-write.table(res_pw , paste0("./data-output/res_enricher_", resName), quote = F, sep = "\t", row.names = F)
+write.table(res_enr, paste0("./data-output/res_enricher_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 ## ---------------------------
 
 ### select enriched pathways from combined pathway databases file
-res_pw <- as.data.frame(databases[databases$pathway %in% res$ID,])
+res_pw <- as.data.frame(databases[databases$pathway %in% res_enr$ID,])
 
 ### select only unique rows
 res_pw <- unique(res_pw)
@@ -76,7 +82,7 @@ ensembl <- useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl", mirror = "us
 genes <- getBM(
   attributes = c('hgnc_symbol', 'entrezgene_id'), 
   filters = 'entrezgene_id',
-  values = edge_table$entrezgene,
+  values = res_pw$entrezgene,
   mart = ensembl
 )
 
@@ -85,12 +91,10 @@ res_pw$hgnc_symbol <- genes$hgnc_symbol[match(res_pw$entrezgene, genes$entrezgen
 
 ### remove NAs and empty values as they are pseudogenes, microRNAs or discontinued genes
 res_pw <- res_pw[!is.na(res_pw$hgnc_symbol),]
-res_pw <- res_pw[-(res_pw$hgnc_symbol == ""),]
+res_pw <- res_pw[-which(res_pw$hgnc_symbol == ""),]
 
 ### save result
-resName <- "GO0006915"
-
-write.table(res_pw , paste0("./data-output/enriched_", resName), quote = F, sep = "\t", row.names = F)
+write.table(res_pw, paste0("./data-output/pws_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 ## ---------------------------
 
@@ -101,6 +105,7 @@ write.table(res_pw , paste0("./data-output/enriched_", resName), quote = F, sep 
 ### set up environment
 rm(list=ls())
 options(stringsAsFactors = F)
+gc()
 
 ### load libraries
 library(clusterProfiler)
@@ -110,15 +115,15 @@ library(dplyr)
 source("./functions/GSEA.R")
 
 ### load gene-expression file with specific ranked score
-data <- read.table("./data-output/ranked_TiO2.txt", header = T, sep ="\t")
+data <- read.table("./data-output/rankscore_TiO2.txt", header = T, sep ="\t")
 
 ### load geneset
-fileName <- "enriched_"
+fileName <- "GO0034599"
 
-geneset <- read.table(paste0("./data-output/", fileName), header = T, sep = "t")
+geneset <- read.table(paste0("./data-output/pws_", fileName, ".txt"), header = T, sep = "\t")
 
 ### perform GSEA analysis
-GSEAan(GENESET = geneset, fileName = "")
+GSEAanalysis(GENESET = geneset, fileName = paste0(fileName))
 
 ## ---------------------------
 
@@ -128,6 +133,78 @@ GSEAan(GENESET = geneset, fileName = "")
 # NES is used for cell color
 # Significance (maybe possible) as stars
 # Cluster rows
+
+### set up environment
+rm(list=ls())
+options(stringsAsFactors = F)
+gc()
+
+### load libraries
+library(data.table)
+
+### load in GSEA result files
+fileName = "GO0034599"
+
+files <- list.files(path = paste0(getwd(), "/data-output/GSEA"), pattern = paste0(fileName))
+for (i in 1:length(files)){
+  assign(files[i], read.table(paste0(getwd(), "/data-output/GSEA/", files[i]), header = T, sep = "\t"))
+}
+
+##### TEST CREATING HEATMAP #####
+
+## need to find nicer way for this
+colnames(`GSEA_GO0034599-1.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-1.txt`)[c(2:11)], "1", sep = "_")
+colnames(`GSEA_GO0034599-2.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-2.txt`)[c(2:11)], "2", sep = "_")
+colnames(`GSEA_GO0034599-3.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-3.txt`)[c(2:11)], "3", sep = "_")
+colnames(`GSEA_GO0034599-4.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-4.txt`)[c(2:11)], "4", sep = "_")
+colnames(`GSEA_GO0034599-5.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-5.txt`)[c(2:11)], "5", sep = "_")
+colnames(`GSEA_GO0034599-6.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-6.txt`)[c(2:11)], "6", sep = "_")
+
+res_merge <- merge(`GSEA_GO0034599-1.txt`, `GSEA_GO0034599-2.txt`, by = "ID")
+res_merge <- merge(res_merge, `GSEA_GO0034599-3.txt`, by = "ID")
+res_merge <- merge(res_merge, `GSEA_GO0034599-4.txt`, by = "ID")
+res_merge <- merge(res_merge, `GSEA_GO0034599-5.txt`, by = "ID")
+res_merge <- merge(res_merge, `GSEA_GO0034599-6.txt`, by = "ID")
+
+test <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
+test <- test[c(1,(grep("NES_", names(test))), (grep("pvalue_", names(test))))]
+
+## will create function out of this part later
+library(pheatmap)
+library(colorRamps)
+library(RColorBrewer)
+
+rownames(test) <- test[,1]
+test <- test[-1]
+test <- test[c(1:6)]
+
+labels_row <- rownames(test)
+
+fileName = "GO0034599"
+
+### create heatmap
+pheatmap(test, cluster_cols = F, cluster_rows = T, 
+         #color = col(10000),
+         fontsize_row = 5, na_col = "#DDDDDD", scale = "column",
+         #legend_breaks = c(),
+         #legend_labels = c(),
+         labels_row = labels_row,
+         labels_col = c("Caco2 10µg/ml",
+                        "Caco2 100µg/ml",
+                        "SAE 10µg/ml",
+                        "SAE 100µg/ml",
+                        "THP1 10µg/ml",
+                        "THP1 100µg/ml"),
+         angle_col = 90,
+         gaps_col = c(2,4),
+         fontsize_col = 8,
+         #annotation_row = clusters,
+         #annotation_colors = mycolors,
+         annotation_names_row = F,
+         annotation_legend = T,
+         #gaps_row = c(),
+         cellheight = 10, cellwidth = 20,
+         filename = paste0("./data-output/images/", fileName, "_heatmap.pdf"))
 
 ## ---------------------------
 
