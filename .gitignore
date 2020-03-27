@@ -1,3 +1,9 @@
+# exclude everything
+data-ouput/*
+
+# exception to the rule
+!data-ouput/.gitkeep 
+
 # History files
 .Rhistory
 .Rapp.history
