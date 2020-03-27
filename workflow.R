@@ -12,21 +12,14 @@
 ## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
 ## Running under: Windows 10 x64 (build 17763)
-## Packages: clusterProfiler_3.14.3, plyr_1.8.6, biomaRt_2.42.0, dplyr_0.8.5, data.table_1.12.8 
+## Packages: clusterProfiler_3.14.3, plyr_1.8.6, biomaRt_2.42.0, dplyr_0.8.5, data.table_1.12.8, pheatmap_1.0.12,
+## RColorBrewer_1.1-2, colorRamps_2.3 
 ##
 ## ---------------------------
 
-# Installation R packages
-# install.packages("BiocManager")
-## TODO: add all packages which need to be installed!
-# BiocManager::install(c("rstudioapi","RCy3","clusterProfiler"))
-
-## ---------------------------
-
 # Step 1: Data import and pre-processing
-# Read data file (describe how data needs to look like)
-# Data pre-processing if needed
-# Define number of experiments/comparisons
+# See data folder which holds three data pre-processing scripts
+# For additional information see the README.md file
 
 ## ---------------------------
 
@@ -120,7 +113,7 @@ source("./functions/GSEA.R")
 data <- read.table("./data/data-output/rankscore_TiO2.txt", header = T, sep ="\t")
 
 ### load geneset
-geneset <- read.table(paste0("./data/data-output/pws_", fileName, ".txt"), header = T, sep = "\t")
+geneset <- read.table(paste0("./data-output/pws_", fileName, ".txt"), header = T, sep = "\t")
 
 ### perform GSEA analysis
 GSEAanalysis(GENESET = geneset, fileName = paste0(fileName))
@@ -163,24 +156,7 @@ res_sig <- res_sig[c(1,(grep("enrichmentScore_", names(res_sig))), (grep("pvalue
 write.table(res_sig, paste0("./data-output/sigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 
-##### TEST #####
-
-library(EnhancedVolcano)
-
-res1 <- res_sig[c(1,5,11)]
-rownames(res1) <- res1[,1]
-res1 <- res1[-1]
-
-
-EnhancedVolcano(res1,
-                lab = rownames(res1),
-                x = 'NES_4',
-                y = 'pvalue_4',
-                xlim = c(-2, 2),
-                pCutoff = 0.05,
-                FCcutoff = 1)
-
-## will create function out of this part later
+####### will create function out of this part later ######
 
 rownames(res_sig) <- res_sig[,1]
 res_sig <- res_sig[-1]
@@ -210,6 +186,25 @@ pheatmap(res_sig, cluster_cols = F, cluster_rows = T,
          #gaps_row = c(),
          cellheight = 10, cellwidth = 20,
          filename = paste0("./data-output/images/test-", fileName, "_heatmap.pdf"))
+
+##### TEST #####
+library(EnhancedVolcano)
+
+res1 <- res_sig[c(1,5,11)]
+rownames(res1) <- res1[,1]
+res1 <- res1[-1]
+
+
+EnhancedVolcano(res1,
+                lab = rownames(res1),
+                x = 'NES_4',
+                y = 'pvalue_4',
+                xlim = c(-2, 2),
+                pCutoff = 0.05,
+                FCcutoff = 1)
+
+### session information
+sessionInfo()
 
 ## ---------------------------
 
