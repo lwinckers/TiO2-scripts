@@ -169,6 +169,28 @@ res_merge <- merge(res_merge, `GSEA_GO0034599-6.txt`, by = "ID")
 test <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
 test <- test[c(1,(grep("NES_", names(test))), (grep("pvalue_", names(test))))]
 
+library(EnhancedVolcano)
+
+res1 <- test[c(1,5,11)]
+rownames(res1) <- res1[,1]
+res1 <- res1[-1]
+
+
+EnhancedVolcano(res1,
+                lab = rownames(res1),
+                x = 'NES_4',
+                y = 'pvalue_4',
+                xlim = c(-2, 2),
+                pCutoff = 0.05,
+                FCcutoff = 1)
+
+histtest <- hist(test$NES_5, breaks = 50)
+min(test$NES_2)
+max(test$NES_2)
+
+min(test$NES_3)
+max(test$NES_3)
+
 ## will create function out of this part later
 library(pheatmap)
 library(colorRamps)
