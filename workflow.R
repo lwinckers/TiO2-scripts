@@ -28,14 +28,7 @@
 # Data pre-processing if needed
 # Define number of experiments/comparisons
 
-
 ## ---------------------------
-
-# Step 2: Pathway selection
-# Read process gene list
-# Read pathway gene set collections
-# Run overrepresentation analysis
-# Create gene set with all selected pathways
 
 ### set up environment
 rm(list=ls())
@@ -47,17 +40,35 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
 
 ### load libraries
+## step 2
 library(clusterProfiler)
 library(plyr)
 library(biomaRt)
 
-### load in gene GO-term genelist
+## step 3
+library(clusterProfiler)
+library(dplyr)
+
+## step 4
+library(data.table)
+library(pheatmap)
+library(colorRamps)
+library(RColorBrewer)
+
+### provide name of GO-term which you want to use
 fileName <- "GO0034599"
 
-goterm <- read.table(paste0("./data-output/ann_", fileName ,".txt"), header = T, sep ="\t")
+# Step 2: Pathway selection
+# Read process gene list
+# Read pathway gene set collections
+# Run overrepresentation analysis
+# Create gene set with all selected pathways
+
+### load in gene GO-term genelist
+goterm <- read.table(paste0("./data/data-output/ann_", fileName ,".txt"), header = T, sep ="\t")
 
 ### load in pathway databases file
-databases <- read.table("./data-output/pw_databases.txt", header = T, sep ="\t")
+databases <- read.table("./data/data-output/pw_databases.txt", header = T, sep ="\t")
 
 ### perform enricher analysis
 res_enr <- as.data.frame(enricher(gene = goterm$entrezgene_id, TERM2GENE = databases,
@@ -102,25 +113,14 @@ write.table(res_pw, paste0("./data-output/pws_", fileName, ".txt"), quote = F, s
 # Run GSEA per comparison with selected gene set collection
 # Select significant results in at least one comparison
 
-### set up environment
-rm(list=ls())
-options(stringsAsFactors = F)
-gc()
-
-### load libraries
-library(clusterProfiler)
-library(dplyr)
-
 ### link to GSEA analysis function
 source("./functions/GSEA.R")
 
 ### load gene-expression file with specific ranked score
-data <- read.table("./data-output/rankscore_TiO2.txt", header = T, sep ="\t")
+data <- read.table("./data/data-output/rankscore_TiO2.txt", header = T, sep ="\t")
 
 ### load geneset
-fileName <- "GO0034599"
-
-geneset <- read.table(paste0("./data-output/pws_", fileName, ".txt"), header = T, sep = "\t")
+geneset <- read.table(paste0("./data/data-output/pws_", fileName, ".txt"), header = T, sep = "\t")
 
 ### perform GSEA analysis
 GSEAanalysis(GENESET = geneset, fileName = paste0(fileName))
@@ -134,17 +134,8 @@ GSEAanalysis(GENESET = geneset, fileName = paste0(fileName))
 # Significance (maybe possible) as stars
 # Cluster rows
 
-### set up environment
-rm(list=ls())
-options(stringsAsFactors = F)
-gc()
-
-### load libraries
-library(data.table)
 
 ### load in GSEA result files
-fileName = "GO0034599"
-
 files <- list.files(path = paste0(getwd(), "/data-output/GSEA"), pattern = paste0(fileName))
 for (i in 1:length(files)){
   assign(paste0("file", i), read.table(paste0(getwd(), "/data-output/GSEA/", files[i]), header = T, sep = "\t"))
@@ -167,7 +158,7 @@ res_merge <- merge(res_merge, file5, by = "ID")
 res_merge <- merge(res_merge, file6, by = "ID")
 
 res_sig <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
-res_sig <- res_sig[c(1,(grep("NES_", names(res_sig))), (grep("pvalue_", names(res_sig))))]
+res_sig <- res_sig[c(1,(grep("enrichmentScore_", names(res_sig))), (grep("pvalue_", names(res_sig))))]
 
 write.table(res_sig, paste0("./data-output/sigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
@@ -189,28 +180,15 @@ EnhancedVolcano(res1,
                 pCutoff = 0.05,
                 FCcutoff = 1)
 
-histtest <- hist(test$NES_5, breaks = 50)
-min(test$NES_2)
-max(test$NES_2)
-
-min(test$NES_3)
-max(test$NES_3)
-
 ## will create function out of this part later
-library(pheatmap)
-library(colorRamps)
-library(RColorBrewer)
 
 rownames(res_sig) <- res_sig[,1]
 res_sig <- res_sig[-1]
 res_sig <- res_sig[c(1:6)]
-
 labels_row <- rownames(res_sig)
 
-fileName = "GO0034599"
-
 ### create heatmap
-pheatmap(test, cluster_cols = F, cluster_rows = T, 
+pheatmap(res_sig, cluster_cols = F, cluster_rows = T, 
          #color = col(10000),
          fontsize_row = 5, na_col = "#DDDDDD", scale = "column",
          #legend_breaks = c(),
@@ -231,7 +209,7 @@ pheatmap(test, cluster_cols = F, cluster_rows = T,
          annotation_legend = T,
          #gaps_row = c(),
          cellheight = 10, cellwidth = 20,
-         filename = paste0("./data-output/images/", fileName, "_heatmap.pdf"))
+         filename = paste0("./data-output/images/test-", fileName, "_heatmap.pdf"))
 
 ## ---------------------------
 
