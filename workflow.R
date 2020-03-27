@@ -147,31 +147,36 @@ fileName = "GO0034599"
 
 files <- list.files(path = paste0(getwd(), "/data-output/GSEA"), pattern = paste0(fileName))
 for (i in 1:length(files)){
-  assign(files[i], read.table(paste0(getwd(), "/data-output/GSEA/", files[i]), header = T, sep = "\t"))
+  assign(paste0("file", i), read.table(paste0(getwd(), "/data-output/GSEA/", files[i]), header = T, sep = "\t"))
 }
 
 ##### TEST CREATING HEATMAP #####
 
 ## need to find nicer way for this
-colnames(`GSEA_GO0034599-1.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-1.txt`)[c(2:11)], "1", sep = "_")
-colnames(`GSEA_GO0034599-2.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-2.txt`)[c(2:11)], "2", sep = "_")
-colnames(`GSEA_GO0034599-3.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-3.txt`)[c(2:11)], "3", sep = "_")
-colnames(`GSEA_GO0034599-4.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-4.txt`)[c(2:11)], "4", sep = "_")
-colnames(`GSEA_GO0034599-5.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-5.txt`)[c(2:11)], "5", sep = "_")
-colnames(`GSEA_GO0034599-6.txt`)[c(2:11)] <- paste(colnames(`GSEA_GO0034599-6.txt`)[c(2:11)], "6", sep = "_")
+colnames(file1)[c(2:11)] <- paste(colnames(file1)[c(2:11)], "1", sep = "_")
+colnames(file2)[c(2:11)] <- paste(colnames(file2)[c(2:11)], "2", sep = "_")
+colnames(file3)[c(2:11)] <- paste(colnames(file3)[c(2:11)], "3", sep = "_")
+colnames(file4)[c(2:11)] <- paste(colnames(file4)[c(2:11)], "4", sep = "_")
+colnames(file5)[c(2:11)] <- paste(colnames(file5)[c(2:11)], "5", sep = "_")
+colnames(file6)[c(2:11)] <- paste(colnames(file6)[c(2:11)], "6", sep = "_")
 
-res_merge <- merge(`GSEA_GO0034599-1.txt`, `GSEA_GO0034599-2.txt`, by = "ID")
-res_merge <- merge(res_merge, `GSEA_GO0034599-3.txt`, by = "ID")
-res_merge <- merge(res_merge, `GSEA_GO0034599-4.txt`, by = "ID")
-res_merge <- merge(res_merge, `GSEA_GO0034599-5.txt`, by = "ID")
-res_merge <- merge(res_merge, `GSEA_GO0034599-6.txt`, by = "ID")
+res_merge <- merge(file1, file2, by = "ID")
+res_merge <- merge(res_merge, file3, by = "ID")
+res_merge <- merge(res_merge, file4, by = "ID")
+res_merge <- merge(res_merge, file5, by = "ID")
+res_merge <- merge(res_merge, file6, by = "ID")
 
-test <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
-test <- test[c(1,(grep("NES_", names(test))), (grep("pvalue_", names(test))))]
+res_sig <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
+res_sig <- res_sig[c(1,(grep("NES_", names(res_sig))), (grep("pvalue_", names(res_sig))))]
+
+write.table(res_sig, paste0("./data-output/sigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+
+
+##### TEST #####
 
 library(EnhancedVolcano)
 
-res1 <- test[c(1,5,11)]
+res1 <- res_sig[c(1,5,11)]
 rownames(res1) <- res1[,1]
 res1 <- res1[-1]
 
@@ -196,11 +201,11 @@ library(pheatmap)
 library(colorRamps)
 library(RColorBrewer)
 
-rownames(test) <- test[,1]
-test <- test[-1]
-test <- test[c(1:6)]
+rownames(res_sig) <- res_sig[,1]
+res_sig <- res_sig[-1]
+res_sig <- res_sig[c(1:6)]
 
-labels_row <- rownames(test)
+labels_row <- rownames(res_sig)
 
 fileName = "GO0034599"
 
