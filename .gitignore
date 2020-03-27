@@ -1,6 +1,3 @@
-# ignore all generated files
-data-output/*
-
 # History files
 .Rhistory
 .Rapp.history
