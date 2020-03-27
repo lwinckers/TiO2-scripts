@@ -1,8 +1,8 @@
 # exclude everything
-data-ouput/*
+data-output/*
 
 # exception to the rule
-!data-ouput/.gitkeep 
+!data-output/.gitkeep 
 
 # History files
 .Rhistory
