@@ -45,6 +45,7 @@ rsconnect/
 
 # Word temporary
 *.doc
+*.docx
 
 # Word Auto Backup File
 Backup of *.doc
