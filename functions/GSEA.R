@@ -12,7 +12,7 @@ GSEAanalysis <- function(GENESET, fileName){
                 minGSSize = 10, maxGSSize = 500,
                 pAdjustMethod = "BH", TERM2GENE = GENESET,
                 nPerm = 1000)
-    loc = paste(getwd(), paste0("/data-output/GSEA/GSEA_",fileName,"-",i-3,".txt"),sep="")
+    loc = paste(getwd(), paste0("/output/GSEA/GSEA_",fileName,"-",i-3,".txt"),sep="")
     write.table(res, file = loc, sep="\t", quote = F,
                 row.names = F)
 }}

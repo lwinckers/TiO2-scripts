@@ -49,7 +49,7 @@ library(colorRamps)
 library(RColorBrewer)
 
 ### provide name of GO-term which you want to use
-fileName <- "GO0034599"
+fileName <- "GO0006954"
 
 # Step 2: Pathway selection
 # Read process gene list
@@ -116,7 +116,7 @@ data <- read.table("./data/data-output/rankscore_TiO2.txt", header = T, sep ="\t
 geneset <- read.table(paste0("./output/pws_", fileName, ".txt"), header = T, sep = "\t")
 
 ### perform GSEA analysis
-GSEAanalysis(GENESET = geneset, fileName = paste0(fileName))
+GSEAanalysis(GENESET = databases, fileName = paste0("test-", fileName))
 
 ## ---------------------------
 
