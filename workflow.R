@@ -70,7 +70,7 @@ res_enr <- as.data.frame(enricher(gene = goterm$entrezgene_id, TERM2GENE = datab
                               pvalueCutoff = 0.05, qvalueCutoff = 0.05))
 
 ### save result
-write.table(res_enr, paste0("./data-output/res_enricher_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+write.table(res_enr, paste0("./output/res_enricher_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 ## ---------------------------
 
@@ -98,7 +98,7 @@ res_pw <- res_pw[!is.na(res_pw$hgnc_symbol),]
 res_pw <- res_pw[-which(res_pw$hgnc_symbol == ""),]
 
 ### save result
-write.table(res_pw, paste0("./data-output/pws_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+write.table(res_pw, paste0("./output/pws_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 ## ---------------------------
 
@@ -113,7 +113,7 @@ source("./functions/GSEA.R")
 data <- read.table("./data/data-output/rankscore_TiO2.txt", header = T, sep ="\t")
 
 ### load geneset
-geneset <- read.table(paste0("./data-output/pws_", fileName, ".txt"), header = T, sep = "\t")
+geneset <- read.table(paste0("./output/pws_", fileName, ".txt"), header = T, sep = "\t")
 
 ### perform GSEA analysis
 GSEAanalysis(GENESET = geneset, fileName = paste0(fileName))
@@ -129,9 +129,9 @@ GSEAanalysis(GENESET = geneset, fileName = paste0(fileName))
 
 
 ### load in GSEA result files
-files <- list.files(path = paste0(getwd(), "/data-output/GSEA"), pattern = paste0(fileName))
+files <- list.files(path = paste0(getwd(), "/output/GSEA"), pattern = paste0(fileName))
 for (i in 1:length(files)){
-  assign(paste0("file", i), read.table(paste0(getwd(), "/data-output/GSEA/", files[i]), header = T, sep = "\t"))
+  assign(paste0("file", i), read.table(paste0(getwd(), "/output/GSEA/", files[i]), header = T, sep = "\t"))
 }
 
 ##### TEST CREATING HEATMAP #####
@@ -153,7 +153,7 @@ res_merge <- merge(res_merge, file6, by = "ID")
 res_sig <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
 res_sig <- res_sig[c(1,(grep("enrichmentScore_", names(res_sig))), (grep("pvalue_", names(res_sig))))]
 
-write.table(res_sig, paste0("./data-output/sigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+write.table(res_sig, paste0("./output/sigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 
 ####### will create function out of this part later ######
@@ -185,7 +185,7 @@ pheatmap(res_sig, cluster_cols = F, cluster_rows = T,
          annotation_legend = T,
          #gaps_row = c(),
          cellheight = 10, cellwidth = 20,
-         filename = paste0("./data-output/images/test-", fileName, "_heatmap.pdf"))
+         filename = paste0("./output/images/test-", fileName, "_heatmap.pdf"))
 
 ##### TEST #####
 library(EnhancedVolcano)
