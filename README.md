@@ -22,7 +22,18 @@ Folder which contains the fucntions that will be used in the [workflow.R script]
 
 ### Pre-processing steps
 * #### GO-term gene lists
+Script that loads in GO-term genelists, and annotates the HGNC-symbols to entrezgene identifiers.
 
 * #### Pathway GMT files
+Script that loads in GMT files from WikiPathways, KEGG and Reactome and combines these three into one data-frame. This data-frame contains two columns; pathway and gene.
 
 * #### Data pre-processing
+Script that loads in mircoarray gene-expression data of six conditions, of which the raw files were pre-processed using [ArrayAnalysis](arrayanalysis.org), are combined into one data-frame. This data-frame contains fold change, log fold change and p-value for each conditions. Enseble identifiers, entrezgene identifiers and HGNC-symbols are annotated for all measured genes. 
+Script also calculates scores which will be used to rank the genes for GSEA analysis. Scores are calculated according to the formula; signed Fold change * -log10(p-value).
+
+### Workflow script
+* #### Pathway selection
+
+* #### GSEA analysis
+
+* #### Heatmap creation
