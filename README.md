@@ -6,15 +6,17 @@ This workflow can entirely be run in the [workflow.R script](https://github.com/
 ## Structure
 
 ### Main repository
-The main repository contains the [workflow.R script](https://github.com/laurent2207/TiO2-scripts/blob/master/workflow.R), the [data folder](https://github.com/laurent2207/TiO2-scripts/tree/master/data), the [output folder](https://github.com/laurent2207/TiO2-scripts/tree/master/output) and the [functions folder](https://github.com/laurent2207/TiO2-scripts/tree/master/functions). 
+* #### workflow.R script
+Main workflow script. For details see below.
 
 * #### Data folder
-Describe what's in the data folder 
+Folder which contains the raw data and three pre-processing scripts. Details for these scripts can be found below. 
 
 * #### Output folder
+Folder which is dedicated for the output of the [workflow.R script](https://github.com/laurent2207/TiO2-scripts/blob/master/workflow.R).
 
 * #### Functions folder
-
+Folder which contains the fucntions that will be used in the [workflow.R script](https://github.com/laurent2207/TiO2-scripts/blob/master/workflow.R).
 
 ## Scripts
 
