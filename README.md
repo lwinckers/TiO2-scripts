@@ -38,7 +38,7 @@ Script also calculates scores which will be used to rank the genes for GSEA anal
 Selects pathways based on GO-term genelists. Enricher function from the [clusterProfiler package](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) is used to get significant enriched pathways from the three pathwaydatabses. 
 
 * #### GSEA analysis
-Performs GSEA analysis based on the significant enriched pathways, which are used as genesets, and the ranked genes. Genes are ranked accoring to the rankingscore which was calculated in the [data pre-processing script](https://github.com/laurent2207/TiO2-scripts/blob/master/data/data_pre_processing.R).
+Performs GSEA analysis based on the significant enriched pathways, which are used as genesets, and the ranked genes. Genes are ranked accoring to the rankingscore which was calculated in the [data pre-processing script](https://github.com/laurent2207/TiO2-scripts/blob/master/data/data_pre_processing.R). GSEA function from the [clusterProfiler package](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) is used.
 
 * #### Heatmap creation
 Creates heatmap for each GO-term. Heatmap depicts the normalised enriched-score obtained fomr the GSEA analysis for pathways which are significant for at least one of the conditions. 
