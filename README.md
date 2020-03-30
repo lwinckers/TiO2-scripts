@@ -31,6 +31,8 @@ Script that loads in GMT files from WikiPathways, KEGG and Reactome and combines
 Script that loads in mircoarray gene-expression data of six conditions, of which the raw files were pre-processed using [ArrayAnalysis](arrayanalysis.org), are combined into one data-frame. This data-frame contains fold change, log fold change and p-value for each conditions. Enseble identifiers, entrezgene identifiers and HGNC-symbols are annotated for all measured genes. 
 Script also calculates scores which will be used to rank the genes for GSEA analysis. Scores are calculated according to the formula; signed Fold change * -log10(p-value).
 
+----
+
 ### Workflow script
 * #### Pathway selection
 Selects pathways based on GO-term genelists. Enricher function from the [clusterProfiler package](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) is used to get significant enriched pathways from the three pathwaydatabses. 
