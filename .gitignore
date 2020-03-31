@@ -43,6 +43,10 @@ rsconnect/
 
 *.tmp
 
+# Word
+.doc*
+.docx*
+
 # Word temporary
 ~$*.doc*
 ~$*.docx*
