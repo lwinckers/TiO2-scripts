@@ -33,19 +33,13 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
 
 ### load gmt files and transpose the obtained lists to data frames
-path = paste0(getwd(), "/data-input")
-gmtFile <- list.files(path = path, pattern = ".gmt")
-for (i in 1:length(gmtFile)){
-  assign(gmtFile[i], read.gmt(paste0(path,"/",gmtFile[i])))
-}
+gmtFile <- read.gmt("./data-input/gmt_wp_Homo_sapiens.gmt")
+gmtFile <- plyr::ldply(gmtFile, data.frame)
 
-gmtFile <- mget(ls(pattern = ".gmt"))
-gmtFile <- lapply(gmtFile, function(x){plyr::ldply(x,data.frame)})
-
-### combine pathway database files and clean it
-databases <- do.call(rbind, gmtFile)
-colnames(databases) <- c("pathway", "entrezgene")
-databases$entrezgene <- as.numeric(databases$entrezgene)
+### Clean data frame
+colnames(gmtFile) <- c("pathway", "entrezgene")
+gmtFile$entrezgene <- as.numeric(gmtFile$entrezgene)
 
 ### save file of combined pathway databases
-write.table(databases, "./data-output/pw_databases.txt", quote = F, row.names = F, sep = "\t")
+write.table(gmtFile, "./data-output/wp_database.txt", quote = F, row.names = F, sep = "\t")
+

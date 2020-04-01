@@ -2,7 +2,7 @@
 ### Laurent Winckers, Maastricht University - Department of Bioinformatics BiGCaT
 ### 2020-03-23
 
-GSEAanalysis <- function(GENESET, fileName){
+GSEAanalysis <- function(GENESET, fileName, data){
   for(i in 4:9) {
     dat <- as.numeric(data[,i])
     names(dat) <- as.character(data[,3])

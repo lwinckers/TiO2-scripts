@@ -49,60 +49,11 @@ library(colorRamps)
 library(RColorBrewer)
 
 ### provide name of GO-term which you want to use
-fileName <- "GO0006954"
-
-# Step 2: Pathway selection
-# Read process gene list
-# Read pathway gene set collections
-# Run overrepresentation analysis
-# Create gene set with all selected pathways
-
-### load in gene GO-term genelist
-goterm <- read.table(paste0("./data/data-output/ann_", fileName ,".txt"), header = T, sep ="\t")
-
-### load in pathway databases file
-databases <- read.table("./data/data-output/pw_databases.txt", header = T, sep ="\t")
-
-### perform enricher analysis
-res_enr <- as.data.frame(enricher(gene = goterm$entrezgene_id, TERM2GENE = databases,
-                              minGSSize = 10, maxGSSize = 500, 
-                              pAdjustMethod = "BH",
-                              pvalueCutoff = 0.05, qvalueCutoff = 0.05))
-
-### save result
-write.table(res_enr, paste0("./output/res_enricher_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+fileName <- "GO0006974"
 
 ## ---------------------------
 
-### select enriched pathways from combined pathway databases file
-res_pw <- as.data.frame(databases[databases$pathway %in% res_enr$ID,])
-
-### select only unique rows
-res_pw <- unique(res_pw)
-
-### map entrezgene IDs to hgnc symbols
-ensembl <- useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl", mirror = "useast")
-
-genes <- getBM(
-  attributes = c('hgnc_symbol', 'entrezgene_id'), 
-  filters = 'entrezgene_id',
-  values = res_pw$entrezgene,
-  mart = ensembl
-)
-
-### merge edge table with hgnc symbols
-res_pw$hgnc_symbol <- genes$hgnc_symbol[match(res_pw$entrezgene, genes$entrezgene)]
-
-### remove NAs and empty values as they are pseudogenes, microRNAs or discontinued genes
-res_pw <- res_pw[!is.na(res_pw$hgnc_symbol),]
-res_pw <- res_pw[-which(res_pw$hgnc_symbol == ""),]
-
-### save result
-write.table(res_pw, paste0("./output/pws_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
-
-## ---------------------------
-
-# Step 3: GSEA 
+# Step 2: GSEA 
 # Run GSEA per comparison with selected gene set collection
 # Select significant results in at least one comparison
 
@@ -113,10 +64,49 @@ source("./functions/GSEA.R")
 data <- read.table("./data/data-output/rankscore_TiO2.txt", header = T, sep ="\t")
 
 ### load geneset
-geneset <- read.table(paste0("./output/pws_", fileName, ".txt"), header = T, sep = "\t")
+geneset <- read.table("./data/data-output/wp_database.txt", header = T, sep = "\t")
 
 ### perform GSEA analysis
-GSEAanalysis(GENESET = databases, fileName = paste0("test-", fileName))
+GSEAanalysis(GENESET = geneset, fileName = paste0(fileName), data = data)
+
+## ---------------------------
+
+# Step 3: Pathway selection
+# Read process gene list
+# Read pathway gene set collections
+# Run overrepresentation analysis
+# Create gene set with all selected pathways
+
+### load in gene GO-term genelist
+goterm <- read.table(paste0("./data/data-output/ann_", fileName ,".txt"), header = T, sep ="\t")
+
+### load in pathway databases file
+databases <- read.table("./data/data-output/wp_database.txt", header = T, sep ="\t")
+
+
+### perform enricher analysis
+res_enr <- as.data.frame(enricher(gene = goterm$entrezgene_id, TERM2GENE = databases,
+                              minGSSize = 10, maxGSSize = 500, 
+                              pAdjustMethod = "BH",
+                              pvalueCutoff = 0.05, qvalueCutoff = 0.05))
+
+### save result
+write.table(res_enr, paste0("./output/wpres_enricher_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+
+## ---------------------------
+
+### select enriched pathways from combined pathway databases file
+res_pw <- as.data.frame(databases[databases$pathway %in% res_enr$ID,])
+
+### select only unique rows
+res_pw <- unique(res_pw)
+
+### remove NAs and empty values as they are pseudogenes, microRNAs or discontinued genes
+res_pw <- res_pw[!is.na(res_pw$entrezgene),]
+res_pw <- res_pw[-which(res_pw$entrezgene == ""),]
+
+### save result
+write.table(res_pw, paste0("./output/wppws_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 ## ---------------------------
 
@@ -127,14 +117,11 @@ GSEAanalysis(GENESET = databases, fileName = paste0("test-", fileName))
 # Significance (maybe possible) as stars
 # Cluster rows
 
-
 ### load in GSEA result files
-files <- list.files(path = paste0(getwd(), "/output/GSEA"), pattern = paste0(fileName))
+files <- list.files(path = paste0(getwd(), "/output/GSEA"), pattern = paste0("wptest-", fileName))
 for (i in 1:length(files)){
   assign(paste0("file", i), read.table(paste0(getwd(), "/output/GSEA/", files[i]), header = T, sep = "\t"))
 }
-
-##### TEST CREATING HEATMAP #####
 
 ## need to find nicer way for this
 colnames(file1)[c(2:11)] <- paste(colnames(file1)[c(2:11)], "1", sep = "_")
@@ -153,55 +140,14 @@ res_merge <- merge(res_merge, file6, by = "ID")
 res_sig <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
 res_sig <- res_sig[c(1,(grep("enrichmentScore_", names(res_sig))), (grep("pvalue_", names(res_sig))))]
 
-write.table(res_sig, paste0("./output/sigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+write.table(res_sig, paste0("./output/wpsigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
+### link to GSEA analysis function
+source("./functions/heatmap.R")
 
-####### will create function out of this part later ######
+res_sig < res_sig[c(1:6)]
 
-rownames(res_sig) <- res_sig[,1]
-res_sig <- res_sig[-1]
-res_sig <- res_sig[c(1:6)]
-labels_row <- rownames(res_sig)
-
-### create heatmap
-pheatmap(res_sig, cluster_cols = F, cluster_rows = T, 
-         #color = col(10000),
-         fontsize_row = 5, na_col = "#DDDDDD", scale = "column",
-         #legend_breaks = c(),
-         #legend_labels = c(),
-         labels_row = labels_row,
-         labels_col = c("Caco2 10µg/ml",
-                        "Caco2 100µg/ml",
-                        "SAE 10µg/ml",
-                        "SAE 100µg/ml",
-                        "THP1 10µg/ml",
-                        "THP1 100µg/ml"),
-         angle_col = 90,
-         gaps_col = c(2,4),
-         fontsize_col = 8,
-         #annotation_row = clusters,
-         #annotation_colors = mycolors,
-         annotation_names_row = F,
-         annotation_legend = T,
-         #gaps_row = c(),
-         cellheight = 10, cellwidth = 20,
-         filename = paste0("./output/images/test-", fileName, "_heatmap.pdf"))
-
-##### TEST #####
-library(EnhancedVolcano)
-
-res1 <- res_sig[c(1,5,11)]
-rownames(res1) <- res1[,1]
-res1 <- res1[-1]
-
-
-EnhancedVolcano(res1,
-                lab = rownames(res1),
-                x = 'NES_4',
-                y = 'pvalue_4',
-                xlim = c(-2, 2),
-                pCutoff = 0.05,
-                FCcutoff = 1)
+heatmap(fileName = fileName, data = res_sig)
 
 ### session information
 sessionInfo()
