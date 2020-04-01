@@ -28,5 +28,5 @@ heatmap <- function(fileName, data){
          annotation_legend = T,
          #gaps_row = c(),
          cellheight = 10, cellwidth = 20,
-         filename = paste0("./output/images/wptest-", fileName, "_heatmap.pdf"))
+         filename = paste0("./output/images/", fileName, "_heatmap.pdf"))
   }

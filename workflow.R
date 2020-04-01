@@ -64,7 +64,7 @@ source("./functions/GSEA.R")
 data <- read.table("./data/data-output/rankscore_TiO2.txt", header = T, sep ="\t")
 
 ### load geneset
-geneset <- read.table("./data/data-output/wp_database.txt", header = T, sep = "\t")
+geneset <- read.table("./data/data-output/wp_database.txt", header = T, sep = "\t", quote = "", fill = F)
 
 ### perform GSEA analysis
 GSEAanalysis(GENESET = geneset, fileName = paste0(fileName), data = data)
@@ -80,33 +80,22 @@ GSEAanalysis(GENESET = geneset, fileName = paste0(fileName), data = data)
 ### load in gene GO-term genelist
 goterm <- read.table(paste0("./data/data-output/ann_", fileName ,".txt"), header = T, sep ="\t")
 
-### load in pathway databases file
-databases <- read.table("./data/data-output/wp_database.txt", header = T, sep ="\t")
-
-
 ### perform enricher analysis
-res_enr <- as.data.frame(enricher(gene = goterm$entrezgene_id, TERM2GENE = databases,
+res_enr <- as.data.frame(enricher(gene = goterm$entrezgene_id, TERM2GENE = geneset,
                               minGSSize = 10, maxGSSize = 500, 
                               pAdjustMethod = "BH",
                               pvalueCutoff = 0.05, qvalueCutoff = 0.05))
 
 ### save result
-write.table(res_enr, paste0("./output/wpres_enricher_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+write.table(res_enr, paste0("./output/res_enricher_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 ## ---------------------------
 
 ### select enriched pathways from combined pathway databases file
-res_pw <- as.data.frame(databases[databases$pathway %in% res_enr$ID,])
-
-### select only unique rows
-res_pw <- unique(res_pw)
-
-### remove NAs and empty values as they are pseudogenes, microRNAs or discontinued genes
-res_pw <- res_pw[!is.na(res_pw$entrezgene),]
-res_pw <- res_pw[-which(res_pw$entrezgene == ""),]
+res_pw <- as.data.frame(geneset[geneset$pathway %in% res_enr$ID,])
 
 ### save result
-write.table(res_pw, paste0("./output/wppws_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+write.table(res_pw, paste0("./output/pws_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 ## ---------------------------
 
@@ -118,9 +107,9 @@ write.table(res_pw, paste0("./output/wppws_", fileName, ".txt"), quote = F, sep 
 # Cluster rows
 
 ### load in GSEA result files
-files <- list.files(path = paste0(getwd(), "/output/GSEA"), pattern = paste0("wptest-", fileName))
+files <- list.files(path = paste0(getwd(), "/output/GSEA"), pattern = paste0(fileName))
 for (i in 1:length(files)){
-  assign(paste0("file", i), read.table(paste0(getwd(), "/output/GSEA/", files[i]), header = T, sep = "\t"))
+  assign(paste0("file", i), read.table(paste0(getwd(), "/output/GSEA/", files[i]), header = T, sep = "\t", quote = ""))
 }
 
 ## need to find nicer way for this
@@ -140,12 +129,12 @@ res_merge <- merge(res_merge, file6, by = "ID")
 res_sig <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
 res_sig <- res_sig[c(1,(grep("enrichmentScore_", names(res_sig))), (grep("pvalue_", names(res_sig))))]
 
-write.table(res_sig, paste0("./output/wpsigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
+write.table(res_sig, paste0("./output/sigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
 
 ### link to GSEA analysis function
 source("./functions/heatmap.R")
 
-res_sig < res_sig[c(1:6)]
+res_sig <- res_sig[c(1,(grep("enrichmentScore_", names(res_sig))))]
 
 heatmap(fileName = fileName, data = res_sig)
 

@@ -26,14 +26,14 @@ gc()
 
 ### instal libraries
 library(qusage)
-library(data.table)
+library(plyr)
 
 ### set working directroy
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
 
 ### load gmt files and transpose the obtained lists to data frames
-gmtFile <- read.gmt("./data-input/gmt_wp_Homo_sapiens.gmt")
+gmtFile <- qusage::read.gmt("./data-input/gmt_wp_Homo_sapiens.gmt")
 gmtFile <- plyr::ldply(gmtFile, data.frame)
 
 ### Clean data frame
