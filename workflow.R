@@ -74,7 +74,7 @@ GSEAanalysis(GENESET = geneset, fileName = "result", data = data)
 # Create gene set with all selected pathways
 
 ### provide name of GO-term which you want to use
-fileName <- "GO0006954"
+fileName <- "GO0034599"
 
 ### load in gene GO-term genelist
 goterm <- read.table(paste0("./data/data-output/ann_", fileName ,".txt"), header = T, sep ="\t")
@@ -106,7 +106,7 @@ write.table(res_pw, paste0("./output/pws_", fileName, ".txt"), quote = F, sep = 
 # Cluster rows
 
 ### load in GSEA result files
-files <- list.files(path = paste0(getwd(), "/output/GSEA"), pattern = paste0(fileName))
+files <- list.files(path = paste0(getwd(), "/output/GSEA"), pattern = "GSEA_result-")
 for (i in 1:length(files)){
   assign(paste0("file", i), read.table(paste0(getwd(), "/output/GSEA/", files[i]), header = T, sep = "\t", quote = ""))
 }
@@ -127,7 +127,7 @@ res_merge <- merge(res_merge, file6, by = "ID")
 
 res_sig <- res_merge[res_merge$ID %in% res_enr$ID,]
 
-res_sig <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
+res_sig <- subset(res_sig, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
 res_sig <- res_sig[c(1,(grep("enrichmentScore_", names(res_sig))), (grep("pvalue_", names(res_sig))))]
 
 write.table(res_sig, paste0("./output/sigGSEA_", fileName, ".txt"), quote = F, sep = "\t", row.names = F)
