@@ -50,12 +50,8 @@ library(RColorBrewer)
 
 ## ---------------------------
 
-### provide name of GO-term which you want to use
-fileName <- "GO0034599"
-
 # Step 2: GSEA 
-# Run GSEA per comparison with selected gene set collection
-# Select significant results in at least one comparison
+# Run GSEA per condition with wikipathways-reactome geneset collection
 
 ### link to GSEA analysis function
 source("./functions/GSEA.R")
@@ -67,7 +63,7 @@ data <- read.table("./data/data-output/rankscore_TiO2.txt", header = T, sep ="\t
 geneset <- read.table("./data/data-output/wp_database.txt", header = T, sep = "\t", quote = "", fill = F)
 
 ### perform GSEA analysis
-GSEAanalysis(GENESET = geneset, fileName = paste0(fileName), data = data)
+GSEAanalysis(GENESET = geneset, fileName = "result", data = data)
 
 ## ---------------------------
 
@@ -77,12 +73,15 @@ GSEAanalysis(GENESET = geneset, fileName = paste0(fileName), data = data)
 # Run overrepresentation analysis
 # Create gene set with all selected pathways
 
+### provide name of GO-term which you want to use
+fileName <- "GO0006954"
+
 ### load in gene GO-term genelist
 goterm <- read.table(paste0("./data/data-output/ann_", fileName ,".txt"), header = T, sep ="\t")
 
 ### perform enricher analysis
 res_enr <- as.data.frame(enricher(gene = goterm$entrezgene_id, TERM2GENE = geneset,
-                              minGSSize = 10, maxGSSize = 500, 
+                              minGSSize = 10, maxGSSize = 50, 
                               pAdjustMethod = "BH",
                               pvalueCutoff = 0.05, qvalueCutoff = 0.05))
 
@@ -101,7 +100,7 @@ write.table(res_pw, paste0("./output/pws_", fileName, ".txt"), quote = F, sep = 
 
 # Step 4: Create heatmap
 # Columns = all comparisons
-# Rows = selected pathways in gene set collection (only pathways which are significant in at least one comparison)
+# Rows = selected pathways in geneset collection based on signifcant enriched results (only pathways which are significant in at least one comparison)
 # NES is used for cell color
 # Significance (maybe possible) as stars
 # Cluster rows
@@ -125,6 +124,8 @@ res_merge <- merge(res_merge, file3, by = "ID")
 res_merge <- merge(res_merge, file4, by = "ID")
 res_merge <- merge(res_merge, file5, by = "ID")
 res_merge <- merge(res_merge, file6, by = "ID")
+
+res_sig <- res_merge[res_merge$ID %in% res_enr$ID,]
 
 res_sig <- subset(res_merge, pvalue_1 < 0.01 | pvalue_2 < 0.01 | pvalue_3 < 0.01 | pvalue_4 < 0.01 | pvalue_5 < 0.01 | pvalue_6 < 0.01)
 res_sig <- res_sig[c(1,(grep("enrichmentScore_", names(res_sig))), (grep("pvalue_", names(res_sig))))]
