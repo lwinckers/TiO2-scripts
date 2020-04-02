@@ -63,7 +63,7 @@ data <- read.table("./data/data-output/rankscore_TiO2.txt", header = T, sep ="\t
 geneset <- read.table("./data/data-output/wp_database.txt", header = T, sep = "\t", quote = "", fill = F)
 
 ### perform GSEA analysis
-GSEAanalysis(GENESET = geneset, fileName = "result", data = data)
+GSEAanalysis(GENESET = geneset, fileName = "testresult", data = data)
 
 ## ---------------------------
 
@@ -74,7 +74,7 @@ GSEAanalysis(GENESET = geneset, fileName = "result", data = data)
 # Create gene set with all selected pathways
 
 ### provide name of GO-term which you want to use
-fileName <- "GO0034599"
+fileName <- "GO0006974"
 
 ### load in gene GO-term genelist
 goterm <- read.table(paste0("./data/data-output/ann_", fileName ,".txt"), header = T, sep ="\t")
@@ -106,7 +106,7 @@ write.table(res_pw, paste0("./output/pws_", fileName, ".txt"), quote = F, sep = 
 # Cluster rows
 
 ### load in GSEA result files
-files <- list.files(path = paste0(getwd(), "/output/GSEA"), pattern = "GSEA_result-")
+files <- list.files(path = paste0(getwd(), "/output/GSEA"), pattern = "GSEA_testresult-")
 for (i in 1:length(files)){
   assign(paste0("file", i), read.table(paste0(getwd(), "/output/GSEA/", files[i]), header = T, sep = "\t", quote = ""))
 }
@@ -137,7 +137,7 @@ source("./functions/heatmap.R")
 
 res_sig <- res_sig[c(1,(grep("enrichmentScore_", names(res_sig))))]
 
-heatmap(fileName = fileName, data = res_sig)
+heatmap(fileName = paste0("test",fileName), data = res_sig)
 
 ### session information
 sessionInfo()
