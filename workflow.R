@@ -48,10 +48,10 @@ library(pheatmap)
 library(colorRamps)
 library(RColorBrewer)
 
-### provide name of GO-term which you want to use
-fileName <- "GO0006974"
-
 ## ---------------------------
+
+### provide name of GO-term which you want to use
+fileName <- "GO0034599"
 
 # Step 2: GSEA 
 # Run GSEA per comparison with selected gene set collection
