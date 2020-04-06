@@ -81,7 +81,7 @@ goterm <- read.table(paste0("./data/data-output/ann_", fileName ,".txt"), header
 
 ### perform enricher analysis
 res_enr <- as.data.frame(enricher(gene = goterm$entrezgene_id, TERM2GENE = geneset,
-                              minGSSize = 10, maxGSSize = 50, 
+                              minGSSize = 10, maxGSSize = 500, 
                               pAdjustMethod = "BH",
                               pvalueCutoff = 0.05, qvalueCutoff = 0.05))
 
