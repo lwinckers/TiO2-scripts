@@ -4,6 +4,11 @@ output/*
 # exception to the rule
 !output/.gitkeep 
 
+goterm-preprocessing/*.txt
+data-preprocessing/TiO2-dataset.txt
+data-preprocessing/TiO2-dataset-ranks.txt
+data-preprocessing/*.png
+
 # History files
 .Rhistory
 .Rapp.history

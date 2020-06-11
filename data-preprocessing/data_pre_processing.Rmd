@@ -1,0 +1,140 @@
+# Script and session info
+Script name: data_pre_processing.Rmd
+
+Purpose of script: pre-process gene-expression data that will be used in: https://github.com/laurent2207/TiO2-scripts.
+Gene-expression data: GEO:GSE42069
+
+Author: Laurent Winckers, Martina Kutmon
+
+Date Created: 2020-03-23
+
+## Session info:
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 18362)
+Packages: biomaRt_2.42.0, dplyr_0.8.5
+
+# Install required packages and set up BioMart
+```{r}
+library(biomaRt)
+library(dplyr)
+library(EnhancedVolcano)
+library(rstudioapi)
+```
+
+# Set up environment
+```{r}
+#clear workspace and set string as factors to false
+rm(list=ls())
+options(stringsAsFactors = F)
+
+#set working directroy
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) does not work in markdown as they are not linked to RStudio somehow
+```
+
+# Load gene expression data (analysed with arrayanalysis.org)
+```{r}
+# Caco2
+caco2_low <- read.table("TiO2_24hrs_10_Caco2.txt", sep = "\t", header = T)
+caco2_high <- read.table("TiO2_24hrs_100_Caco2.txt", sep = "\t", header = T)
+# SAE
+SAE_low <- read.table("TiO2_24hrs_10_SAE.txt", sep = "\t", header = T)
+SAE_high <- read.table("TiO2_24hrs_100_SAE.txt", sep = "\t", header = T)
+# THP1
+THP1_low <- read.table("TiO2_24hrs_10_THP1.txt", sep = "\t", header = T)
+THP1_high <- read.table("TiO2_24hrs_100_THP1.txt", sep = "\t", header = T)
+
+# Select necessary columns, remove columns that are not needed further down the process
+# Caco2
+caco2_low <- caco2_low[c(1,2,3,6)]
+caco2_high <- caco2_high[c(1,2,3,6)]
+# SAE
+SAE_low <- SAE_low[c(1,2,3,6)]
+SAE_high <- SAE_high[c(1,2,3,6)]
+# THP1
+THP1_low <- THP1_low[c(1,2,3,6)]
+THP1_high <- THP1_high[c(1,2,3,6)]
+
+# Change column names adressing respective cell line and either 10 ug/ml, low (L) or 100 ug/ml, high (H) concentration
+# Caco2
+colnames(caco2_low)[c(2,3,4)] <- c("caco2_L_logFC", "caco2_L_FC", "caco2_L_pval")
+colnames(caco2_high)[c(2,3,4)] <- c("caco2_H_logFC", "caco2_H_FC", "caco2_H_pval")
+# SAE
+colnames(SAE_low)[c(2,3,4)] <- c("SAE_L_logFC", "SAE_L_FC", "SAE_L_pval")
+colnames(SAE_high)[c(2,3,4)] <- c("SAE_H_logFC", "SAE_H_FC", "SAE_H_pval")
+# THP1
+colnames(THP1_low)[c(2,3,4)] <- c("THP1_L_logFC", "THP1_L_FC", "THP1_L_pval")
+colnames(THP1_high)[c(2,3,4)] <- c("THP1_H_logFC", "THP1_H_FC", "THP1_H_pval")
+```
+
+# Identifier mapping
+```{r}
+### select ensembl IDs from one of the datasets
+ids <- as.data.frame(caco2_low$ENSG_ID)
+colnames(ids) <- "ENSG_ID"
+
+### map Ensemble IDs to Entrez Gene and HGNC symbols
+ensembl <- useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl")#, mirror = "useast")
+genes <- getBM(attributes = c('ensembl_gene_id', 'hgnc_symbol', 'entrezgene_id'), filters = 'ensembl_gene_id', values = ids$ENSG_ID, mart = ensembl)
+
+### remove genes without Entrez Gene identifier from gene list 11791 -> 11324
+genes <- genes[!(is.na(genes$entrezgene_id)),]
+genes <- genes[!duplicated(genes$entrezgene_id),]
+```
+
+# Merge datasets with annotated gene identifiers
+```{r}
+colnames(genes)[1] <- "ENSG_ID"
+data <- merge(genes, caco2_low, by = "ENSG_ID")
+data <- merge(data, caco2_high, by = "ENSG_ID")
+data <- merge(data, SAE_low, by = "ENSG_ID")
+data <- merge(data, SAE_high, by = "ENSG_ID")
+data <- merge(data, THP1_low, by = "ENSG_ID")
+data <- merge(data, THP1_high, by = "ENSG_ID")
+```
+
+# Data visualization (volcano plots)
+```{r}
+cl <- EnhancedVolcano(data,title = "CACO2 10 ug/ml 24h", lab = data$hgnc_symbol, x = 'caco2_L_logFC',y = 'caco2_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05)
+
+ch <- EnhancedVolcano(data,title = "CACO2 100 ug/ml 24h", lab = data$hgnc_symbol, x = 'caco2_H_logFC',y = 'caco2_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05)
+
+sl <- EnhancedVolcano(data,title = "SAE 10 ug/ml 24h", lab = data$hgnc_symbol, x = 'SAE_L_logFC',y = 'SAE_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05)
+
+sh <- EnhancedVolcano(data,title = "SAE 100 ug/ml 24h", lab = data$hgnc_symbol, x = 'SAE_H_logFC',y = 'SAE_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05)
+
+tl <- EnhancedVolcano(data,title = "THP1 10 ug/ml 24h", lab = data$hgnc_symbol, x = 'THP1_L_logFC',y = 'THP1_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05)
+
+th <- EnhancedVolcano(data,title = "THP1 100 ug/ml 24h", lab = data$hgnc_symbol, x = 'THP1_H_logFC',y = 'THP1_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05)
+
+png(file="volcanoplots.png", width = 1020, height = 1080)
+par(mar=c(1, 1, 1, 1))
+cowplot::plot_grid(cl, ch, sl, sh, tl, th, ncol=2, nrow=3)
+dev.off()
+```
+
+
+# Save results and ranked value for GSEA 
+```{r}
+### save combined annotated gene-expression file
+write.table(data, "TiO2-dataset.txt", sep = "\t", quote = F, row.names = F)
+
+### calculate score  for ranking of genes in GSEA analysis
+# use specific rank-score calculation 
+data_rnk <- data
+data_rnk <- data_rnk %>% mutate(caco2_L_rnk = caco2_L_logFC * -log10(caco2_L_pval))
+data_rnk <- data_rnk %>% mutate(caco2_H_rnk = caco2_H_logFC * -log10(caco2_H_pval))
+data_rnk <- data_rnk %>% mutate(SAE_L_rnk = SAE_L_logFC * -log10(SAE_L_pval))
+data_rnk <- data_rnk %>% mutate(SAE_H_rnk = SAE_H_logFC * -log10(SAE_H_pval))
+data_rnk <- data_rnk %>% mutate(THP1_L_rnk = THP1_L_logFC * -log10(THP1_L_pval))
+data_rnk <- data_rnk %>% mutate(THP1_H_rnk = THP1_H_logFC * -log10(THP1_H_pval))
+
+### save file with ranked scores
+write.table(data_rnk, "TiO2-dataset-logranks.txt", sep = "\t", quote = F, row.names = F)
+```
+
+# Update files for workflow
+```{r}
+file.copy(from = "TiO2-dataset.txt", to = "../data/TiO2-dataset.txt", overwrite = TRUE)
+file.copy(from = "TiO2-dataset-ranks.txt", to = "../data/TiO2-dataset-ranks.txt", overwrite = TRUE)
+```

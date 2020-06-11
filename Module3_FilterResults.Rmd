@@ -1,0 +1,60 @@
+# Script and session info
+Script name: Module3_FilteringResults
+
+Purpose of script: pre-process GO-term genelists that will be used in: https://github.com/laurent2207/TiO2-scripts.
+
+Author: Laurent Winckers, Martina Kutmon
+
+Date Created: 2020-04-22
+
+## Session info:
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 18362)
+Packages:
+
+# Set up environment
+```{r}
+#clear workspace and set string as factors to false
+rm(list=ls())
+options(stringsAsFactors = F)
+
+#set working directroy
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+```
+
+# Install required packages
+```{r}
+library(data.table)
+library(pheatmap)
+library(colorRamps)
+library(RColorBrewer)
+library(igraph)
+```
+
+# Load ORA results for GO-terms - only select rows that are significant (adjusted p-value < 0.05)
+```{r}
+path = paste0(getwd(), "/output")
+ls_GO <- list.files(path = path, pattern = "_ORA.txt")
+for (i in 1:length(ls_GO)){
+  assign(paste0("GO", i), read.table(paste0(path,"/",ls_GO[i]), header = T, sep = "\t", quote = ""))
+}
+
+GO1 <- GO1[GO1$p.adjust < 0.05,]
+GO2 <- GO2[GO2$p.adjust < 0.05,]
+GO3 <- GO3[GO3$p.adjust < 0.05,]
+GO4 <- GO4[GO4$p.adjust < 0.05,]
+```
+
+# Combine the significant results of all four GO-terms
+```{r}
+sigORA <- rbind(GO1, GO2, GO3, GO4)
+sigORA <- as.data.frame(unique(sigORA$ID))
+colnames(sigORA) <- "ID"
+```
+
+# Filter ORA results of pathways - create plots
+```{r}
+source("functions/filteredPlot.R")
+filteredPlot(x = "up", cell = "Caco2", conc = "H")
+```

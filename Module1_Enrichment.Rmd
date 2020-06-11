@@ -1,0 +1,60 @@
+# Script and session info
+Script name: Module1_Enrichment.Rmd
+
+Purpose of script: Takes one gene list for a process, finds relevant pathways and runs enrichment analysis (using transcriptomics data) to study how process is affected in dataset
+
+Author: Laurent Winckers, Martina Kutmon
+
+Date Created: 2020-03-24
+
+## Session info:
+R version 3.6.3 (2020-02-29)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 17763)
+Packages: clusterProfiler_3.14.3, plyr_1.8.6, biomaRt_2.42.0, dplyr_0.8.5, data.table_1.12.8, pheatmap_1.0.12,
+RColorBrewer_1.1-2, colorRamps_2.3 
+
+# Install required packages and set up BioMart
+```{r}
+library(rstudioapi)
+library(clusterProfiler)
+library(plyr)
+library(biomaRt)
+library(dplyr)
+library(data.table)
+library(pheatmap)
+library(colorRamps)
+library(RColorBrewer)
+library(enrichplot)
+library(DOSE)
+library(org.Hs.eg.db)
+library(ggpubr)
+```
+
+# Set up environment
+```{r}
+#clear workspace and set string as factors to false
+rm(list=ls())
+options(stringsAsFactors = F)
+
+#set working directroy
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) does not work in markdown as they are not linked to RStudio somehow
+```
+
+# Enrichment analysis
+```{r}
+# load gene-expression file 
+data <- read.table("data/TiO2-dataset-ranks.txt", header = T, sep ="\t")
+
+### load geneset
+wp2gene <- clusterProfiler::read.gmt("data/gmt_wp_Homo_sapiens.gmt")
+wp2gene <- wp2gene %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
+wpid2gene <- wp2gene %>% dplyr::select(wpid,gene) #TERM2GENE
+wpid2name <- wp2gene %>% dplyr::select(wpid,name) #TERM2NAME
+
+comparisons <- c("caco2_L","caco2_H","SAE_L","SAE_H","THP1_L", "THP1_H")
+
+source("functions/enrichment.R")
+enrichment(wpid2gene,wpid2name, data, comparisons, 0.26)
+```
+
