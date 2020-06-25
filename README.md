@@ -15,3 +15,5 @@ The second module, to find toxicity related pathways, is used to find toxicity r
  
 * #### Module 3 - Study the effect on toxicity related pathways
 The third module, to study the effect on toxicity related pathways, combines the results of the previous two modules to come up with toxicity related pathways which are used for further biological analysis. The toxicity related pathways found in the second module were used to filter the affected pathways which were retrieved in the first module.
+
+Cite the code: [![DOI](https://zenodo.org/badge/236458629.svg)](https://zenodo.org/badge/latestdoi/236458629)
