@@ -1,5 +1,5 @@
-# Workflow
-
+# Investigating the cell-specific toxicity response to titanium dioxide nanobelts
+---
 ## How to run
 This workflow is sperated in three different modules i.e. [module 1](https://github.com/laurent2207/TiO2-scripts/blob/master/Module1_Enrichment.Rmd), [module 2](https://github.com/laurent2207/TiO2-scripts/blob/master/Module2_GOterm_processing.Rmd) and [module 3](https://github.com/laurent2207/TiO2-scripts/blob/master/Module3_FilterResults.Rmd). The necessary data files can be found in the [data subfolder](https://github.com/laurent2207/TiO2-scripts/tree/master/data). They are already pre-processed and the resulting files can be found, after running the pre-processing script, in the [output folder](https://github.com/laurent2207/TiO2-scripts/tree/master/output). 
 The functions that are used in the modules are found in the [functions subfolder](https://github.com/laurent2207/TiO2-scripts/tree/master/functions).
