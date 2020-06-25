@@ -1,47 +1,24 @@
-
-# NEEDS TO BE UPDATED
-
 # Workflow
 
 ## How to run
-This workflow can entirely be run in the [workflow.R script](https://github.com/laurent2207/TiO2-scripts/blob/master/workflow.R). The necessary data files are already pre-processed and can be found in the [data-output folder](https://github.com/laurent2207/TiO2-scripts/tree/master/data/data-output) in the [data folder](https://github.com/laurent2207/TiO2-scripts/tree/master/data). The [workflow.R script](https://github.com/laurent2207/TiO2-scripts/blob/master/workflow.R) loads in these pre-processed files and the script can be used from the onset.  
+This workflow is sperated in three different modules i.e. [module 1](https://github.com/laurent2207/TiO2-scripts/blob/master/Module1_Enrichment.Rmd), [module 2](https://github.com/laurent2207/TiO2-scripts/blob/master/Module2_GOterm_processing.Rmd) and [module 3](https://github.com/laurent2207/TiO2-scripts/blob/master/Module3_FilterResults.Rmd). The necessary data files can be found in the [data subfolder](https://github.com/laurent2207/TiO2-scripts/tree/master/data). They are already pre-processed and the resulting files can be found, after running the pre-processing script, in the [output folder](https://github.com/laurent2207/TiO2-scripts/tree/master/output). 
+The functions that are used in the modules are found in the [functions subfolder](https://github.com/laurent2207/TiO2-scripts/tree/master/functions).
+
+---
 
 ## Structure
 
 ### Main repository
-* #### workflow.R script
-Main workflow script. For details see below.
+* #### Module 1 - Find affected pathways
+The first module, to find affected pathways, is used to find affected pathways via overrepresentation analysis (ORA) based on gene expression data. Overrepresentation analysis is done to identify significantly enriched pathways from the WikiPathways database. The enricher function of the clusterProfiler package in R (version 3.14.3) [PMID:22455463] is used in this module. Adjusted p-value cut-off and q-value cut-off were set at lower than 0.05. Minimal gene set size was set to 10 and maximal gene set size was set to 300. All other variables were kept standard.
+This module makes use of the pathway models database WikiPathways. WikiPathways (www.wikipathways.org) is an open platform for the curation of biological pathways and hosts a pathway database with custom graphical pathway editing tools [PMID:29136241]. 
+For this module and the second module, pathway-gene information was obtained in the Gene Matrix Transposed (GMT) file format from http://data.wikipathways.org/, including the Curated Collection and the Reactome pathways .
 
-* #### Data folder
-Folder which contains the raw data and three pre-processing scripts. Details for these scripts can be found below. 
+* #### Module 2 - Find toxicity related pathways
+The second module, to find toxicity related pathways, is used to find toxicity related pathways based on Gene Ontology (GO) terms and their respective genes. In this repository, GO-terms were selected based on relation to a toxicologic response in the human body. Genes were obtained from the Gene Ontology (GO) (AmiGO 2 version 2.5.12) categories “apoptotic process” (GO:0006915), “inflammatory response” (GO:0006954), “cellular response to DNA damage stimulus” (GO:0006974) and “cellular response to oxidative stress” (GO:0034599) available at www.geneontology.org [PMID:10802651][PMID:30395331]. Genes are retrieved using the biomaRt package available in R (version 2.42.0) [PMID:19617889, 16082012]. Genes are selected based on organism i.e. Homo sapiens and for all chromosomes. After retrieval genes are filtered based on evidence. Only genes with Gene Ontology evidence ND, NR, NAS, IEA, ISS, ISO, ISA, ISM, IGC and RCA are selected (http://geneontology.org/docs/guide-go-evidence-codes/). ORA was done as described above and WikiPathways was also used as described above. 
+ 
 
-* #### Output folder
-Folder which is dedicated for the output of the [workflow.R script](https://github.com/laurent2207/TiO2-scripts/blob/master/workflow.R).
+* #### Module 3 - Study the effect on toxicity related pathways
+The third module, to study the effect on toxicity related pathways, combines the results of the previous two modules to come up with toxicity related pathways which are used for further biological analysis. The toxicity related pathways found in the second module were used to filter the affected pathways which were retrieved in the first module.
 
-* #### Functions folder
-Folder which contains the fucntions that will be used in the [workflow.R script](https://github.com/laurent2207/TiO2-scripts/blob/master/workflow.R).
 
-## Scripts
-
-### Pre-processing steps
-* #### GO-term gene lists
-Script that loads in GO-term genelists, and annotates the HGNC-symbols to entrezgene identifiers.
-
-* #### Pathway GMT files
-Script that loads in GMT files from WikiPathways, KEGG and Reactome and combines these three into one data-frame. This data-frame contains two columns; pathway and gene.
-
-* #### Data pre-processing
-Script that loads in mircoarray gene-expression data of six conditions, of which the raw files were pre-processed using [ArrayAnalysis](arrayanalysis.org), are combined into one data-frame. This data-frame contains fold change, log fold change and p-value for each conditions. Enseble identifiers, entrezgene identifiers and HGNC-symbols are annotated for all measured genes. 
-Script also calculates scores which will be used to rank the genes for GSEA analysis. Scores are calculated according to the formula; signed Fold change * -log10(p-value).
-
-----
-
-### Workflow script
-* #### Pathway selection
-Selects pathways based on GO-term genelists. Enricher function from the [clusterProfiler package](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) is used to get significant enriched pathways from the three pathwaydatabses. 
-
-* #### GSEA analysis
-Performs GSEA analysis based on the significant enriched pathways, which are used as genesets, and the ranked genes. Genes are ranked accoring to the rankingscore which was calculated in the [data pre-processing script](https://github.com/laurent2207/TiO2-scripts/blob/master/data/data_pre_processing.R). GSEA function from the [clusterProfiler package](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) is used.
-
-* #### Heatmap creation
-Creates heatmap for each GO-term. Heatmap depicts the normalised enriched-score obtained fomr the GSEA analysis for pathways which are significant for at least one of the conditions. 
