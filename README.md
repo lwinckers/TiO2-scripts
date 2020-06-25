@@ -4,9 +4,8 @@
 This workflow is sperated in three different modules i.e. [module 1](https://github.com/laurent2207/TiO2-scripts/blob/master/Module1_Enrichment.Rmd), [module 2](https://github.com/laurent2207/TiO2-scripts/blob/master/Module2_GOterm_processing.Rmd) and [module 3](https://github.com/laurent2207/TiO2-scripts/blob/master/Module3_FilterResults.Rmd). The necessary data files can be found in the [data subfolder](https://github.com/laurent2207/TiO2-scripts/tree/master/data). They are already pre-processed and the resulting files can be found, after running the pre-processing script, in the [output folder](https://github.com/laurent2207/TiO2-scripts/tree/master/output). 
 The functions that are used in the modules are found in the [functions subfolder](https://github.com/laurent2207/TiO2-scripts/tree/master/functions).
 
-## Structure
+## Module descriptions
 
-### Main repository
 * #### Module 1 - Find affected pathways
 The first module, to find affected pathways, is used to find affected pathways via overrepresentation analysis (ORA) based on gene expression data. Overrepresentation analysis is done to identify significantly enriched pathways from the WikiPathways database. The enricher function of the clusterProfiler package in R (version 3.14.3) [PMID:22455463] is used in this module. Adjusted p-value cut-off and q-value cut-off were set at lower than 0.05. Minimal gene set size was set to 10 and maximal gene set size was set to 300. All other variables were kept standard.
 This module makes use of the pathway models database WikiPathways. WikiPathways (www.wikipathways.org) is an open platform for the curation of biological pathways and hosts a pathway database with custom graphical pathway editing tools [PMID:29136241]. 
@@ -17,5 +16,3 @@ The second module, to find toxicity related pathways, is used to find toxicity r
  
 * #### Module 3 - Study the effect on toxicity related pathways
 The third module, to study the effect on toxicity related pathways, combines the results of the previous two modules to come up with toxicity related pathways which are used for further biological analysis. The toxicity related pathways found in the second module were used to filter the affected pathways which were retrieved in the first module.
-
-
