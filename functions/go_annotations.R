@@ -6,7 +6,6 @@ go_annotations <- function(go.term, biomart, output) {
                         mart = biomart)
   res <- res[!is.na(res$entrezgene_id),]
   res <- res[res$go_linkage_type != 'ND',]
-  res <- res[res$go_linkage_type != 'NR',]
   res <- res[res$go_linkage_type != 'NAS',]
   res <- res[res$go_linkage_type != 'IEA',]
   res <- res[res$go_linkage_type != 'ISS',]
