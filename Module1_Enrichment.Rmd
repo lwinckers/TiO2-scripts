@@ -29,6 +29,7 @@ library(enrichplot)
 library(DOSE)
 library(org.Hs.eg.db)
 library(ggpubr)
+library(ggplot2)
 ```
 
 # Set up environment

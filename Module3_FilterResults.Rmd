@@ -30,6 +30,7 @@ library(pheatmap)
 library(colorRamps)
 library(RColorBrewer)
 library(igraph)
+library(ggplot2)
 ```
 
 # Load ORA results for GO-terms - only select rows that are significant (adjusted p-value < 0.05)

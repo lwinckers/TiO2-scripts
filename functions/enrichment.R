@@ -7,31 +7,31 @@ enrichment <- function(wpid2gene,wpid2name, data, comparisons, fccutoff) {
     buffer <- data %>% dplyr::select(starts_with("entrez") | starts_with(i))
     
     # GSEA
-    dat <- as.numeric(buffer[,5])
-    names(dat) <- as.character(buffer[,1])
-    dat <- sort(dat, decreasing = T)
+#    dat <- as.numeric(buffer[,5])
+#    names(dat) <- as.character(buffer[,1])
+#    dat <- sort(dat, decreasing = T)
     
-    fcdat <- as.numeric(buffer[,3])
-    names(fcdat) <- as.character(buffer[,1])
+#    fcdat <- as.numeric(buffer[,3])
+#    names(fcdat) <- as.character(buffer[,1])
     
-    res <- clusterProfiler::GSEA(dat, pvalueCutoff = 3,
-                minGSSize = 10, maxGSSize = 300,
-                TERM2GENE = wpid2gene,
-                TERM2NAME = wpid2name,
-                nPerm = 30000)
-    write.table(res, file = paste("output/GSEA_", i, ".txt", sep=""), sep="\t", quote = F, row.names = F)
+#    res <- clusterProfiler::GSEA(dat, pvalueCutoff = 3,
+#                minGSSize = 10, maxGSSize = 300,
+#                TERM2GENE = wpid2gene,
+#                TERM2NAME = wpid2name,
+#                nPerm = 30000)
+#    write.table(res, file = paste("output/GSEA_", i, ".txt", sep=""), sep="\t", quote = F, row.names = F)
     
-    dp <- dotplot(res, showCategory= 30, x = "NES")
-    ep <- emapplot(res, showCategory = 30)
-    cp <- cnetplot(res, showCategory = 30, node_label="category", foldChange = fcdat)    
-    figure <- ggarrange(ggarrange(dp, ep, ncol = 2, labels = c("A","B")), cp, labels = c("C"), nrow = 2)
-    ggexport(figure, filename = paste("output/GSEA-",i,".png",sep=""), width = 2000, height = 1800)
+#    dp <- dotplot(res, showCategory= 30, x = "NES")
+#    ep <- emapplot(res, showCategory = 30)
+#    cp <- cnetplot(res, showCategory = 30, node_label="category", foldChange = fcdat)    
+#    figure <- ggarrange(ggarrange(dp, ep, ncol = 2, labels = c("A","B")), cp, labels = c("C"), nrow = 2)
+#    ggexport(figure, filename = paste("output/GSEA-",i,".png",sep=""), width = 2000, height = 1800)
     
     # ORA
-    up.genes <- buffer[buffer[,2] > fccutoff & buffer[,4] < 0.05, 1] 
-    dn.genes <- buffer[buffer[,2] < -fccutoff & buffer[,4] < 0.05, 1]
+     up.genes <- buffer[buffer[,2] > fccutoff & buffer[,4] < 0.05, 1] 
+     dn.genes <- buffer[buffer[,2] < -fccutoff & buffer[,4] < 0.05, 1]
 
-    ewp.up <- clusterProfiler::enricher(
+     ewp.up <- clusterProfiler::enricher(
       up.genes,
       pvalueCutoff = 1,
       qvalueCutoff = 1,
@@ -57,6 +57,11 @@ enrichment <- function(wpid2gene,wpid2name, data, comparisons, fccutoff) {
     cp.down <- cnetplot(ewp.down, showCategory=20, node_label="category") 
     #figure <- ggarrange(dp.up, cp.up, dp.down, cp.down, labels = c("A", "B","C", "D"), ncol = 2, nrow = 2)
     figure <- ggarrange(cp.up, cp.down, labels = c("A", "B"), nrow = 2)
-    ggexport(figure, filename = paste("output/ORA-",i,".png",sep=""), width = 2000, height = 2000)
+    
+    # png
+    #ggexport(figure, filename = paste("output/ORA-",i,".png",sep=""), width = 2000, height = 2000)
+    
+    # svg
+    ggsave(file=paste("output/ORA-",i,".svg",sep=""), plot=figure, width=18, height=18, limitsize = FALSE)
   }
 }

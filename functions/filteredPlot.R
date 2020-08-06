@@ -14,7 +14,15 @@ filteredPlot <- function(x, cell, conc) {
   net <- graph_from_data_frame(d = edges, vertices = nodes, directed = F) 
   V(net)$color <- ifelse(V(net)$type == "Pathway", "orange", "lightblue")
   
-  png(paste0("output/filteredPlot_",cell,"_",x,"_",conc,".png"), width = 2000, height = 2000)
+  svg(paste0("output/filteredPlot_",cell,"_",x,"_",conc,".svg"), width = 20, height = 20)
   plot(net, edge.width = 5, vertex.size = 6, rescale = T, vertex.label = NA, xlim = c(-1.2,1.2), asp = 0)
   dev.off()
+  
+  # svg
+  #ggsave(file=paste0("output/filteredPlot_",cell,"_",x,"_",conc,".svg"), plot=figure, width=20, height=20, limitsize = FALSE)
+  
+  # png
+#  png(paste0("output/filteredPlot_",cell,"_",x,"_",conc,".png"), width = 2000, height = 2000)
+#  plot(net, edge.width = 5, vertex.size = 6, rescale = T, vertex.label = NA, xlim = c(-1.2,1.2), asp = 0)
+#  dev.off()
 }
