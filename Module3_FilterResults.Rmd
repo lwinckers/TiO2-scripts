@@ -57,5 +57,20 @@ colnames(sigORA) <- "ID"
 # Filter ORA results of pathways - create plots
 ```{r}
 source("functions/filteredPlot.R")
+
+filteredPlot(x = "up", cell = "Caco2", conc = "L")
+filteredPlot(x = "down", cell = "Caco2", conc = "L")
 filteredPlot(x = "up", cell = "Caco2", conc = "H")
+filteredPlot(x = "down", cell = "Caco2", conc = "H")
+
+filteredPlot(x = "up", cell = "SAE", conc = "L")
+filteredPlot(x = "down", cell = "SAE", conc = "L")
+filteredPlot(x = "up", cell = "SAE", conc = "H")
+filteredPlot(x = "down", cell = "SAE", conc = "H")
+
+filteredPlot(x = "up", cell = "THP1", conc = "L")
+filteredPlot(x = "down", cell = "THP1", conc = "L")
+filteredPlot(x = "up", cell = "THP1", conc = "H")
+filteredPlot(x = "down", cell = "THP1", conc = "H")
+
 ```
