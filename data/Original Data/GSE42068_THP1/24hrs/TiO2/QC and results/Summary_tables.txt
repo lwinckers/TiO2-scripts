@@ -1,0 +1,20 @@
+No_of_genes:	11825
+	
+Comparisons	pVal< 0.1 tot	pVal< 0.1 up	pVal< 0.1 down	pVal< 0.05 tot	pVal< 0.05 up	pVal< 0.05 down	pVal< 0.01 tot	pVal< 0.01 up	pVal< 0.01 down	pVal< 0.001 tot	pVal< 0.001 up	pVal< 0.001 down
+Expected NoOfGenes	1182	591	591	591	295.5	295.5	118	59	59	12	6	6
+comp_Group1-Group2	1208	557	651	581	289	292	124	66	58	19	12	7
+comp_Group1-Group3	3927	1892	2035	3009	1477	1532	1656	839	817	767	358	409
+comp_Group2-Group1	1208	651	557	581	292	289	124	58	66	19	7	12
+comp_Group3-Group1	3927	2035	1892	3009	1532	1477	1656	817	839	767	409	358
+			
+Comparisons	Adj_pVal< 0.05 tot	Adj_pVal< 0.05 up	Adj_pVal< 0.05 down
+comp_Group1-Group2	0	0	0
+comp_Group1-Group3	1349	671	678
+comp_Group2-Group1	0	0	0
+comp_Group3-Group1	1349	678	671
+												
+Comparison	|FC|>= 1.1 tot	|FC|>= 1.1 up	|FC|>= 1.1 down	|FC|>= 1.2 tot	|FC|>= 1.2 up	|FC|>= 1.2 down	|FC|>= 1.5 tot	|FC|>= 1.5 up	|FC|>= 1.5 down	|FC|>= 2 tot	|FC|>= 2 up	|FC|>= 2 down
+comp_Group1-Group2	2754	1382	1372	655	351	304	50	34	16	9	6	3
+comp_Group1-Group3	5325	2571	2754	2832	1452	1380	843	441	402	270	130	140
+comp_Group2-Group1	2754	1372	1382	655	304	351	50	16	34	9	3	6
+comp_Group3-Group1	5325	2754	2571	2832	1380	1452	843	402	441	270	140	130
