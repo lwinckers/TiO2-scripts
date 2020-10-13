@@ -33,6 +33,7 @@ Packages Part 2: rstudioapi_0.11, biomaRt_2.42.0, clusterProfiler_3.14.3, tidyr_
 
 Packages Part 3: rstudioapi_0.11, data.table_1.12.8, pheatmap_1.0.12, colorRamps_2.3, RColorBrewer_1.1-2, igraph_1.2.5, ggplot2_3.3.2
 
+
 ###############################
 ##### Data pre-processing #####
 ###############################
@@ -197,7 +198,6 @@ enrichment(wpid2gene,wpid2name, data, comparisons, 0.26)
 ##### PART 2 #####
 ##################
 
-
 # Set up environment
 ```{r}
 #clear workspace and set string as factors to false
@@ -252,7 +252,6 @@ for(i in go.terms) {
 ##################
 ##### PART 3 #####
 ##################
-
 
 # Set up environment
 ```{r}
@@ -314,5 +313,4 @@ filteredPlot(x = "up", cell = "THP1", conc = "L")
 filteredPlot(x = "down", cell = "THP1", conc = "L")
 filteredPlot(x = "up", cell = "THP1", conc = "H")
 filteredPlot(x = "down", cell = "THP1", conc = "H")
-
 ```
