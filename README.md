@@ -11,8 +11,8 @@ Furthermore it creates depict signififcantly differentially expressed genes in v
 
 * #### Part 1 - Find affected pathways
 The first part is used to find affected pathways. This part uses overrepresentation analysis (ORA) based on gene expression data. This method is used to identify significantly enriched pathways from the WikiPathways database. 
-In this part the enricher function of the clusterProfiler package in R (version 3.14.3) [[PMID:22455463]](https://pubmed.ncbi.nlm.nih.gov/22455463/). Almost all variables were kept standard except the Adjusted p-value cut-off and q-value cut-off were set at lower than 0.05 and minimal gene set and maximal gene set size were set to 10 and 300 respectively.
-As mentioned above, this part makes use of the pathway models from the WikiPathways database (www.wikipathways.org). It is an open platform for the curation of biological pathways and hosts a pathway database with custom graphical pathway editing tools [[PMID:29136241]](https://pubmed.ncbi.nlm.nih.gov/29136241/). 
+In this part the enricher function of the clusterProfiler package in R (version 3.14.3) [PMID:[22455463](https://pubmed.ncbi.nlm.nih.gov/22455463/)]. Almost all variables were kept standard except the Adjusted p-value cut-off and q-value cut-off were set at lower than 0.05 and minimal gene set and maximal gene set size were set to 10 and 300 respectively.
+As mentioned above, this part makes use of the pathway models from the WikiPathways database (www.wikipathways.org). It is an open platform for the curation of biological pathways and hosts a pathway database with custom graphical pathway editing tools [PMID:[29136241](https://pubmed.ncbi.nlm.nih.gov/29136241/)]. 
 For both this part and the second part, pathway-gene information was obtained in the Gene Matrix Transposed (GMT) file format from http://data.wikipathways.org/. The pathway dataset included the Curated Collection and the Reactome pathways.
 
 * #### Part 2 - Find toxicity related pathways
