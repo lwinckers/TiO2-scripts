@@ -6,7 +6,7 @@ The functions that are used in the script are found in the [functions folder](ht
 ## Part descriptions
 
 * #### Data pre-processing
-Pre-processing of data files, which can be found in the [original_data subfolder](https://github.com/laurent2207/TiO2-scripts/tree/master/data/original_data). This part gene identifiers so that the files include Ensemble identifiers, HGNC symbols and Entrez Gene identifiers. Moreover, it merges the seperate files into one file named TiO2-dataset.txt and saves this file in the [output folder](https://github.com/laurent2207/TiO2-scripts/tree/master/output).
+Pre-processing of data files, which can be found in the [original_data subfolder](https://github.com/laurent2207/TiO2-scripts/tree/master/data/original_data). This part gene identifiers so that the files include Ensemble identifiers, HGNC symbols and Entrez Gene identifiers. Moreover, it merges the separate files into one file named TiO2-dataset.txt and saves this file in the [output folder](https://github.com/laurent2207/TiO2-scripts/tree/master/output).
 Furthermore it creates depict signififcantly differentially expressed genes in volcano plots for all conditions, using the EnhanvedVolcano package in R (version 3.6.1) [[Blighe, Rana, and Lewis (2018)](https://github.com/kevinblighe/EnhancedVolcano)].
 
 * #### Part 1 - Find affected pathways
