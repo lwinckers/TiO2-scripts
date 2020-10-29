@@ -12,17 +12,50 @@ filteredPlot <- function(x, cell, conc) {
   nodes$type <- ifelse(nodes$ID %like% "^WP" , 'Pathway', 'Gene')
   
   net <- graph_from_data_frame(d = edges, vertices = nodes, directed = F) 
-  V(net)$color <- ifelse(V(net)$type == "Pathway", "orange", "lightblue")
+  #V(net)$color <- ifelse(V(net)$type == "Pathway", "orange", "lightblue")
   
+  # to create colors for each GO-term the pathway is affiliated with we need to create a matrix which depicts this affiliation
+  # additionally we need to point out which ones are genes
+  m <- sigORA
+  m <- m[m$ID %in% data$ID,]
+  row.names(m) <- m[,1]
+  m <- m[-1]
+  m$pid5 <- 0
+  m <- as.data.frame(sapply(m, as.integer))
+  
+  k <- matrix(0, ncol = 4, nrow = (nrow(nodes)-nrow(data)))
+  k <- data.frame(k)
+  k$pid5 <- 1
+  colnames(k) <- c("pid1", "pid2", "pid3" , "pid4", "pid5")
+  
+  mm <- rbind(m,k)
+  am <- data.matrix(mm)
+  
+  values <- lapply(seq_len(nrow(am)), function(i) am[i,])
+  
+  # create colorblind friendly color palette
+  pal <- c("#FFC20A", "#006CD1", "#D35FB7", "#D41159", "#D3D3D3")
+  
+  # increase font size
+  V(net)$label.cex = 1.5
+  # set label color to black
+  V(net)$label.color = "#000000"
+  
+  # SVG
   svg(paste0("output/filteredPlot_",cell,"_",x,"_",conc,".svg"), width = 20, height = 20)
-  plot(net, edge.width = 5, vertex.size = 6, rescale = T, vertex.label = NA, xlim = c(-1.2,1.2), asp = 0)
+  plot(net, vertex.shape="pie", vertex.pie=values, vertex.pie.color=list(pal),
+       edge.width = 5, vertex.size = ifelse(nodes$type == "Pathway", 6, 3), rescale = T, 
+       vertex.label = ifelse(nodes$type == "Pathway", nodes$ID, NA), 
+       vertex.frame.color="lightgray",
+       xlim = c(-1.2,1.2), asp = 0)
   dev.off()
-  
-  # svg
-  #ggsave(file=paste0("output/filteredPlot_",cell,"_",x,"_",conc,".svg"), plot=figure, width=20, height=20, limitsize = FALSE)
   
   # png
 #  png(paste0("output/filteredPlot_",cell,"_",x,"_",conc,".png"), width = 2000, height = 2000)
-#  plot(net, edge.width = 5, vertex.size = 6, rescale = T, vertex.label = NA, xlim = c(-1.2,1.2), asp = 0)
+#  plot(net, vertex.shape="pie", vertex.pie=values, vertex.pie.color=list(pal),
+#       edge.width = 5, vertex.size = ifelse(nodes$type == "Pathway", 6, 3), rescale = T, 
+#       vertex.label = ifelse(nodes$type == "Pathway", nodes$ID, NA), 
+#       vertex.frame.color="lightgray",
+#       xlim = c(-1.2,1.2), asp = 0)
 #  dev.off()
 }

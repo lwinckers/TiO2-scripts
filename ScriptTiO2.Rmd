@@ -291,8 +291,30 @@ GO4 <- GO4[GO4$p.adjust < 0.05,]
 # Combine the significant results of all four GO-terms
 ```{r}
 sigORA <- rbind(GO1, GO2, GO3, GO4)
-sigORA <- as.data.frame(unique(sigORA$ID))
-colnames(sigORA) <- "ID"
+sigORA <- as.data.frame(unique(sigORA[,c(1)]))
+colnames(sigORA) <- c("ID")
+
+for (i in 1:nrow(sigORA)) { 
+  if (sigORA$ID[i] %in% GO1$ID) {
+  sigORA$pid1[i] <- "1"
+} else {
+  sigORA$pid1[i] <- "0"
+}
+  if (sigORA$ID[i] %in% GO2$ID) {
+  sigORA$pid2[i] <- "1"
+} else {
+  sigORA$pid2[i] <- "0"
+} 
+  if (sigORA$ID[i] %in% GO3$ID) {
+  sigORA$pid3[i] <- "1"
+} else {
+  sigORA$pid3[i] <- "0"
+}
+  if (sigORA$ID[i] %in% GO4$ID) {
+  sigORA$pid4[i] <- "1"
+} else {
+  sigORA$pid4[i] <- "0"
+}}
 ```
 
 # Filter ORA results of pathways - create plots
