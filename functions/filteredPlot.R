@@ -11,6 +11,9 @@ filteredPlot <- function(x, cell, conc) {
   nodes <- unique(data.frame(ID = c(edges[,1], edges[,2])))
   nodes$type <- ifelse(nodes$ID %like% "^WP" , 'Pathway', 'Gene')
   
+  write.table(nodes, paste0("output/nodesEdges/", fileName, "_nodes.txt"), quote = F, sep = "\t", row.names = F)
+  write.table(edges, paste0("output/nodesEdges/", fileName, "_edges.txt"), quote = F, sep = "\t", row.names = F)
+  
   net <- graph_from_data_frame(d = edges, vertices = nodes, directed = F) 
   #V(net)$color <- ifelse(V(net)$type == "Pathway", "orange", "lightblue")
   
@@ -44,8 +47,9 @@ filteredPlot <- function(x, cell, conc) {
   # SVG
   svg(paste0("output/filteredPlot_",cell,"_",x,"_",conc,".svg"), width = 20, height = 20)
   plot(net, vertex.shape="pie", vertex.pie=values, vertex.pie.color=list(pal),
-       edge.width = 5, vertex.size = ifelse(nodes$type == "Pathway", 6, 3), rescale = T, 
-       vertex.label = ifelse(nodes$type == "Pathway", nodes$ID, NA), 
+       edge.width = 2, vertex.size = ifelse(nodes$type == "Pathway", 6, 3), rescale = T, 
+       vertex.label = NA,
+       #vertex.label = ifelse(nodes$type == "Pathway", nodes$ID, NA), 
        vertex.frame.color="lightgray",
        xlim = c(-1.2,1.2), asp = 0)
   dev.off()
