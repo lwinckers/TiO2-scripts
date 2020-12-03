@@ -18,7 +18,7 @@ enrichment <- function(wpid2gene,wpid2name, data, comparisons, fccutoff) {
       TERM2GENE = wpid2gene,
       TERM2NAME = wpid2name)
     
-    write.table(ewp.up, file = paste("output/ORA_up_", i, ".txt", sep=""), sep="\t", quote = F, row.names = F)
+    write.table(ewp.up, file = paste("output/ORApw_up_", i, ".txt", sep=""), sep="\t", quote = F, row.names = F)
   
     ewp.down <- clusterProfiler::enricher(
       dn.genes,
@@ -28,7 +28,7 @@ enrichment <- function(wpid2gene,wpid2name, data, comparisons, fccutoff) {
       TERM2GENE = wpid2gene,
       TERM2NAME = wpid2name)
     
-    write.table(ewp.down, file = paste("output/ORA_down_", i, ".txt", sep=""), sep="\t", quote = F, row.names = F)
+    write.table(ewp.down, file = paste("output/ORApw_down_", i, ".txt", sep=""), sep="\t", quote = F, row.names = F)
     
     #dp.up <- dotplot(ewp.up, showCategory= 20, color = "p.adjust")
     cp.up <- cnetplot(ewp.up, showCategory=20, node_label="category")  

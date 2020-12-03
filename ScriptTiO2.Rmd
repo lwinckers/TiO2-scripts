@@ -317,22 +317,25 @@ for (i in 1:nrow(sigORA)) {
 }}
 ```
 
+# Solution to read pathway ORA results and only select rows where pvalue < 0.05
+# Need to rewrite function below to implement this nicely
+```{r}
+path = paste0(getwd(), "/output")
+ls_pw <- list.files(path = path, pattern = "ORApw_")
+for (i in 1:length(ls_pw)){
+  assign(gsub(".txt", "", paste0(ls_pw[i])), read.table(paste0(path,"/",ls_pw[i]), header = T, sep = "\t", quote = ""))
+}
+
+ls_pw <- mget(ls(pattern = 'ORApw_'))
+ls_pw <- lapply(ls_pw, function(x){x[x$pvalue<0.05,]}) 
+#list2env(ls_pw, envir = .GlobalEnv)
+```
+
 # Filter ORA results of pathways - create plots
 ```{r}
 source("functions/filteredPlot.R")
 
-filteredPlot(x = "up", cell = "Caco2", conc = "L")
-filteredPlot(x = "down", cell = "Caco2", conc = "L")
-filteredPlot(x = "up", cell = "Caco2", conc = "H")
-filteredPlot(x = "down", cell = "Caco2", conc = "H")
-
-filteredPlot(x = "up", cell = "SAE", conc = "L")
-filteredPlot(x = "down", cell = "SAE", conc = "L")
-filteredPlot(x = "up", cell = "SAE", conc = "H")
-filteredPlot(x = "down", cell = "SAE", conc = "H")
-
-filteredPlot(x = "up", cell = "THP1", conc = "L")
-filteredPlot(x = "down", cell = "THP1", conc = "L")
-filteredPlot(x = "up", cell = "THP1", conc = "H")
-filteredPlot(x = "down", cell = "THP1", conc = "H")
+for (i in 1:length(ls_pw)){
+filteredPlot(data = ls_pw[[i]], fileName = gsub("ORApw_", "", names(ls_pw[i])))
+}
 ```

@@ -1,8 +1,5 @@
-filteredPlot <- function(x, cell, conc) {
-  fileName = paste("ORA", x, cell, conc, sep = "_")
-  data <- read.table(paste0("output/", fileName, ".txt"), header = T, sep = "\t", quote = "")
-  data <- data[data$pvalue < 0.05,]
-  
+filteredPlot <- function(data, fileName) {
+  data <- data
   data <- data[data$ID %in% sigORA$ID,]
   write.table(data, paste0("output/", fileName, "_filtered.txt"), quote = F, sep = "\t", row.names = F)
   
@@ -15,8 +12,7 @@ filteredPlot <- function(x, cell, conc) {
   write.table(edges, paste0("output/nodesEdges/", fileName, "_edges.txt"), quote = F, sep = "\t", row.names = F)
   
   net <- graph_from_data_frame(d = edges, vertices = nodes, directed = F) 
-  #V(net)$color <- ifelse(V(net)$type == "Pathway", "orange", "lightblue")
-  
+
   # to create colors for each GO-term the pathway is affiliated with we need to create a matrix which depicts this affiliation
   # additionally we need to point out which ones are genes
   m <- sigORA
@@ -45,21 +41,11 @@ filteredPlot <- function(x, cell, conc) {
   V(net)$label.color = "#000000"
   
   # SVG
-  svg(paste0("output/filteredPlot_",cell,"_",x,"_",conc,".svg"), width = 20, height = 20)
+  svg(paste0("output/filteredPlot_",fileName,".svg"), width = 20, height = 20)
   plot(net, vertex.shape="pie", vertex.pie=values, vertex.pie.color=list(pal),
        edge.width = 2, vertex.size = ifelse(nodes$type == "Pathway", 6, 3), rescale = T, 
        vertex.label = NA,
-       #vertex.label = ifelse(nodes$type == "Pathway", nodes$ID, NA), 
        vertex.frame.color="lightgray",
        xlim = c(-1.2,1.2), asp = 0)
   dev.off()
-  
-  # png
-#  png(paste0("output/filteredPlot_",cell,"_",x,"_",conc,".png"), width = 2000, height = 2000)
-#  plot(net, vertex.shape="pie", vertex.pie=values, vertex.pie.color=list(pal),
-#       edge.width = 5, vertex.size = ifelse(nodes$type == "Pathway", 6, 3), rescale = T, 
-#       vertex.label = ifelse(nodes$type == "Pathway", nodes$ID, NA), 
-#       vertex.frame.color="lightgray",
-#       xlim = c(-1.2,1.2), asp = 0)
-#  dev.off()
 }
