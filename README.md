@@ -9,6 +9,8 @@ The functions that are used in the script are found in the [functions folder](ht
 Pre-processing of data files, which can be found in the [original_data subfolder](https://github.com/laurent2207/TiO2-scripts/tree/master/data/original_data). This part gene identifiers so that the files include Ensemble identifiers, HGNC symbols and Entrez Gene identifiers. Moreover, it merges the separate files into one file named TiO2-dataset.txt and saves this file in the [output folder](https://github.com/laurent2207/TiO2-scripts/tree/master/output).
 Furthermore it creates depict signififcantly differentially expressed genes in volcano plots for all conditions, using the EnhanvedVolcano package in R (version 3.6.1) [[Blighe, Rana, and Lewis (2018)](https://github.com/kevinblighe/EnhancedVolcano)].
 
+#### For the next three parts use the [ScriptTiO2.Rmd file](https://github.com/laurent2207/TiO2-scripts/blob/master/ScriptTiO2.Rmd)
+
 * #### Part 1 - Find affected pathways
 The first part is used to find affected pathways. This part uses overrepresentation analysis (ORA) based on gene expression data. This method is used to identify significantly enriched pathways from the WikiPathways database. 
 In this part the enricher function of the clusterProfiler package in R [PMID:[22455463](https://pubmed.ncbi.nlm.nih.gov/22455463/)]. Almost all variables were kept standard except the Adjusted p-value cut-off and q-value cut-off were set at lower than 0.05 and minimal gene set and maximal gene set size were set to 10 and 300 respectively.
