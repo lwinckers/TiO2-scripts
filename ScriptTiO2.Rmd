@@ -59,14 +59,14 @@ options(stringsAsFactors = F)
 # Load gene expression data (analysed with arrayanalysis.org)
 ```{r}
 # Caco2
-caco2_low <- read.table("./data/data-pre-processing/TiO2_24hrs_10_Caco2.txt", sep = "\t", header = T)
-caco2_high <- read.table("./data/data-pre-processing/TiO2_24hrs_100_Caco2.txt", sep = "\t", header = T)
+caco2_low <- read.table("./data/data_pre_processing/TiO2_24hrs_10_Caco2.txt", sep = "\t", header = T)
+caco2_high <- read.table("./data/data_pre_processing/TiO2_24hrs_100_Caco2.txt", sep = "\t", header = T)
 # SAE
-SAE_low <- read.table("./data/data-pre-processing/TiO2_24hrs_10_SAE.txt", sep = "\t", header = T)
-SAE_high <- read.table("./data/data-pre-processing/TiO2_24hrs_100_SAE.txt", sep = "\t", header = T)
+SAE_low <- read.table("./data/data_pre_processing/TiO2_24hrs_10_SAE.txt", sep = "\t", header = T)
+SAE_high <- read.table("./data/data_pre_processing/TiO2_24hrs_100_SAE.txt", sep = "\t", header = T)
 # THP1
-THP1_low <- read.table("./data/data-pre-processing/TiO2_24hrs_10_THP1.txt", sep = "\t", header = T)
-THP1_high <- read.table("./data/data-pre-processing/TiO2_24hrs_100_THP1.txt", sep = "\t", header = T)
+THP1_low <- read.table("./data/data_pre_processing/TiO2_24hrs_10_THP1.txt", sep = "\t", header = T)
+THP1_high <- read.table("./data/data_pre_processing/TiO2_24hrs_100_THP1.txt", sep = "\t", header = T)
 
 # Select necessary columns, remove columns that are not needed further down the process
 # Caco2
@@ -183,7 +183,7 @@ data <- read.table("output/TiO2-dataset.txt", header = T, sep ="\t")
 
 ### load geneset
 wp2gene <- clusterProfiler::read.gmt("data/gmt_wp_Homo_sapiens.gmt")
-wp2gene <- wp2gene %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
+wp2gene <- wp2gene %>% tidyr::separate(term, c("name","version","wpid","org"), "%")
 wpid2gene <- wp2gene %>% dplyr::select(wpid,gene) #TERM2GENE
 wpid2name <- wp2gene %>% dplyr::select(wpid,name) #TERM2NAME
 
@@ -229,7 +229,7 @@ go.terms <- c("GO:0006915","GO:0006954","GO:0006974","GO:0034599")
 ```{r}
 ### load genesets
 wp2gene <- clusterProfiler::read.gmt("data/gmt_wp_Homo_sapiens.gmt")
-wp2gene <- wp2gene %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
+wp2gene <- wp2gene %>% tidyr::separate(term, c("name","version","wpid","org"), "%")
 wpid2gene <- wp2gene %>% dplyr::select(wpid,gene) #TERM2GENE
 wpid2name <- wp2gene %>% dplyr::select(wpid,name) #TERM2NAME
 ```
@@ -317,8 +317,7 @@ for (i in 1:nrow(sigORA)) {
 }}
 ```
 
-# Solution to read pathway ORA results and only select rows where pvalue < 0.05
-# Need to rewrite function below to implement this nicely
+# Read pathway ORA results and only select rows where pvalue < 0.05
 ```{r}
 path = paste0(getwd(), "/output")
 ls_pw <- list.files(path = path, pattern = "ORApw_")
