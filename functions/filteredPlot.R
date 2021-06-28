@@ -1,3 +1,7 @@
+### Creation of plots for filtered results
+### Laurent Winckers, Maastricht University - Department of Bioinformatics BiGCaT
+### 2021-06-28
+
 filteredPlot <- function(data, fileName) {
   data <- data
   data <- data[data$ID %in% sigORA$ID,]

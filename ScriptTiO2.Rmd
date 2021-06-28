@@ -10,7 +10,7 @@ Purpose of script: Takes one gene list for a process, finds relevant pathways an
 Part 2:
 Purpose of script: pre-process GO-term genelists that will be used in: https://github.com/laurent2207/TiO2-scripts.
 GO-term genelists: Apoptopic process (GO:0006915), Inflammatory response (GO:0006954)
-GO-term genelists: Cellular response to DNA damage stimulus (GO:0006974), Cellular response to oxidative stress (GO:0034599)
+GO-term genelists: Cellular response to DNA damage stimulus (GO:0006974), response to oxidative stress (GO:0006979)
 
 Part 3:
 Purpose of script: pre-process GO-term genelists that will be used in: https://github.com/laurent2207/TiO2-scripts.
@@ -98,7 +98,7 @@ ids <- as.data.frame(caco2_low$ENSG_ID)
 colnames(ids) <- "ENSG_ID"
 
 ### map Ensemble IDs to Entrez Gene and HGNC symbols
-ensembl <- useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl")#, mirror = "useast")
+ensembl <- useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl", mirror = "useast")
 genes <- getBM(attributes = c('ensembl_gene_id', 'hgnc_symbol', 'entrezgene_id'), filters = 'ensembl_gene_id', values = ids$ENSG_ID, mart = ensembl)
 
 ### remove genes without Entrez Gene identifier from gene list 11791 -> 11324
@@ -222,7 +222,7 @@ biomart <- biomaRt::useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl", hos
 
 # Define GO terms of interest
 ```{r}
-go.terms <- c("GO:0006915","GO:0006954","GO:0006974","GO:0034599")
+go.terms <- c("GO:0006915","GO:0006954","GO:0006974","GO:0006979")
 ```
 
 # Load genesets
@@ -286,11 +286,53 @@ GO1 <- GO1[GO1$p.adjust < 0.05,]
 GO2 <- GO2[GO2$p.adjust < 0.05,]
 GO3 <- GO3[GO3$p.adjust < 0.05,]
 GO4 <- GO4[GO4$p.adjust < 0.05,]
+
+for (i in 1:nrow(GO1)){
+GO1$Perc[i] <- (as.numeric(sub("\\/.*", "", GO1$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO1$BgRatio[i])))*100
+}
+
+for (i in 1:nrow(GO2)){
+GO2$Perc[i] <- (as.numeric(sub("\\/.*", "", GO2$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO2$BgRatio[i])))*100
+}
+
+for (i in 1:nrow(GO3)){
+GO3$Perc[i] <- (as.numeric(sub("\\/.*", "", GO3$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO3$BgRatio[i])))*100
+}
+
+for (i in 1:nrow(GO4)){
+GO4$Perc[i] <- (as.numeric(sub("\\/.*", "", GO4$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO4$BgRatio[i])))*100
+}
+
+GO150 <- GO1[GO1$Perc > 50,]
+GO160 <- GO1[GO1$Perc > 60,]
+GO170 <- GO1[GO1$Perc > 70,]
+GO180 <- GO1[GO1$Perc > 80,]
+
+GO250 <- GO2[GO2$Perc > 50,]
+GO260 <- GO2[GO2$Perc > 60,]
+GO270 <- GO2[GO2$Perc > 70,]
+GO280 <- GO2[GO2$Perc > 80,]
+
+GO350 <- GO3[GO3$Perc > 50,]
+GO360 <- GO3[GO3$Perc > 60,]
+GO370 <- GO3[GO3$Perc > 70,]
+GO380 <- GO3[GO3$Perc > 80,]
+
+GO450 <- GO4[GO4$Perc > 50,]
+GO460 <- GO4[GO4$Perc > 60,]
+GO470 <- GO4[GO4$Perc > 70,]
+GO480 <- GO4[GO4$Perc > 80,]
+
+
+write.table(GO150, "output/GO1.txt", quote = F, sep = "\t", row.names = F)
+write.table(GO250, "output/GO2.txt", quote = F, sep = "\t", row.names = F)
+write.table(GO350, "output/GO3.txt", quote = F, sep = "\t", row.names = F)
+write.table(GO450, "output/GO4.txt", quote = F, sep = "\t", row.names = F)
 ```
 
 # Combine the significant results of all four GO-terms
 ```{r}
-sigORA <- rbind(GO1, GO2, GO3, GO4)
+sigORA <- rbind(GO150, GO250, GO350, GO450)
 sigORA <- as.data.frame(unique(sigORA[,c(1)]))
 colnames(sigORA) <- c("ID")
 

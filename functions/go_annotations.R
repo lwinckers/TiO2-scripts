@@ -1,3 +1,7 @@
+### Selection of genes related to GO-terms based on their evidence 
+### Laurent Winckers, Maastricht University - Department of Bioinformatics BiGCaT
+### 2021-06-28
+
 go_annotations <- function(go.term, biomart, output) {
   
   res <- biomaRt::getBM(attributes = c('ensembl_gene_id', 'hgnc_symbol', 'entrezgene_id', 'go_linkage_type'), 

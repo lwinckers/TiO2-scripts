@@ -3,6 +3,11 @@ output/*
 
 # exception to the rule
 !output/.gitkeep 
+!output/nodesEdges
+
+FiguresPaper
+
+output/nodesEdges/*
 
 goterm-preprocessing/*.txt
 data-preprocessing/TiO2-dataset.txt
