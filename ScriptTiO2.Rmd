@@ -376,7 +376,12 @@ ls_pw <- lapply(ls_pw, function(x){x[x$pvalue<0.05,]})
 ```{r}
 source("functions/filteredPlot.R")
 
+dir.create(paste0(getwd(), "/output/nodesEdges"))
+
 for (i in 1:length(ls_pw)){
 filteredPlot(data = ls_pw[[i]], fileName = gsub("ORApw_", "", names(ls_pw[i])))
 }
 ```
+
+
+
