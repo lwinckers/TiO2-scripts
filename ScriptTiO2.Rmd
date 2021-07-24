@@ -59,14 +59,14 @@ options(stringsAsFactors = F)
 # Load gene expression data (analysed with arrayanalysis.org)
 ```{r}
 # Caco2
-caco2_low <- read.table("./data/data_pre_processing/TiO2_24hrs_10_Caco2.txt", sep = "\t", header = T)
-caco2_high <- read.table("./data/data_pre_processing/TiO2_24hrs_100_Caco2.txt", sep = "\t", header = T)
+caco2_low <- read.table("./data/data_pre_processing/1h/TiO2_1hrs_10_Caco2.txt", sep = "\t", header = T)
+caco2_high <- read.table("./data/data_pre_processing/1h/TiO2_1hrs_100_Caco2.txt", sep = "\t", header = T)
 # SAE
-SAE_low <- read.table("./data/data_pre_processing/TiO2_24hrs_10_SAE.txt", sep = "\t", header = T)
-SAE_high <- read.table("./data/data_pre_processing/TiO2_24hrs_100_SAE.txt", sep = "\t", header = T)
+SAE_low <- read.table("./data/data_pre_processing/1h/TiO2_1hrs_10_SAE.txt", sep = "\t", header = T)
+SAE_high <- read.table("./data/data_pre_processing/1h/TiO2_1hrs_100_SAE.txt", sep = "\t", header = T)
 # THP1
-THP1_low <- read.table("./data/data_pre_processing/TiO2_24hrs_10_THP1.txt", sep = "\t", header = T)
-THP1_high <- read.table("./data/data_pre_processing/TiO2_24hrs_100_THP1.txt", sep = "\t", header = T)
+THP1_low <- read.table("./data/data_pre_processing/1h/TiO2_1hrs_10_THP1.txt", sep = "\t", header = T)
+THP1_high <- read.table("./data/data_pre_processing/1h/TiO2_1hrs_100_THP1.txt", sep = "\t", header = T)
 
 # Select necessary columns, remove columns that are not needed further down the process
 # Caco2
@@ -119,19 +119,19 @@ data <- merge(data, THP1_high, by = "ENSG_ID")
 
 # Data visualization (volcano plots)
 ```{r}
-cl <- EnhancedVolcano(data,title = "CACO2 10 μg/ml 24h", lab = data$hgnc_symbol, x = 'caco2_L_logFC',y = 'caco2_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
+cl <- EnhancedVolcano(data,title = "CACO2 10 μg/ml 1h", lab = data$hgnc_symbol, x = 'caco2_L_logFC',y = 'caco2_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
 
-ch <- EnhancedVolcano(data,title = "CACO2 100 μg/ml 24h", lab = data$hgnc_symbol, x = 'caco2_H_logFC',y = 'caco2_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
+ch <- EnhancedVolcano(data,title = "CACO2 100 μg/ml 1h", lab = data$hgnc_symbol, x = 'caco2_H_logFC',y = 'caco2_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
 
-sl <- EnhancedVolcano(data,title = "SAE 10 μg/ml 24h", lab = data$hgnc_symbol, x = 'SAE_L_logFC',y = 'SAE_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
+sl <- EnhancedVolcano(data,title = "SAE 10 μg/ml 1h", lab = data$hgnc_symbol, x = 'SAE_L_logFC',y = 'SAE_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
 
-sh <- EnhancedVolcano(data,title = "SAE 100 μg/ml 24h", lab = data$hgnc_symbol, x = 'SAE_H_logFC',y = 'SAE_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
+sh <- EnhancedVolcano(data,title = "SAE 100 μg/ml 1h", lab = data$hgnc_symbol, x = 'SAE_H_logFC',y = 'SAE_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
 
-tl <- EnhancedVolcano(data,title = "THP1 10 μg/ml 24h", lab = data$hgnc_symbol, x = 'THP1_L_logFC',y = 'THP1_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
+tl <- EnhancedVolcano(data,title = "THP1 10 μg/ml 1h", lab = data$hgnc_symbol, x = 'THP1_L_logFC',y = 'THP1_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
 
-th <- EnhancedVolcano(data,title = "THP1 100 μg/ml 24h", lab = data$hgnc_symbol, x = 'THP1_H_logFC',y = 'THP1_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
+th <- EnhancedVolcano(data,title = "THP1 100 μg/ml 1h", lab = data$hgnc_symbol, x = 'THP1_H_logFC',y = 'THP1_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
 
-svg(file="./output/volcanoplots.svg", width = 17, height = 18)
+svg(file="./output/1h/volcanoplots.svg", width = 17, height = 18)
 par(mar=c(1, 1, 1, 1))
 cowplot::plot_grid(cl, ch, sl, sh, tl, th, ncol=2, nrow=3)
 dev.off()
@@ -140,7 +140,7 @@ dev.off()
 # Save results and ranked value for GSEA 
 ```{r}
 ### save combined annotated gene-expression file
-write.table(data, "./output/TiO2-dataset.txt", sep = "\t", quote = F, row.names = F)
+write.table(data, "./output/1h/TiO2-dataset.txt", sep = "\t", quote = F, row.names = F)
 ```
 
 
@@ -179,7 +179,7 @@ options(stringsAsFactors = F)
 # Enrichment analysis
 ```{r}
 # load gene-expression file 
-data <- read.table("output/TiO2-dataset.txt", header = T, sep ="\t")
+data <- read.table("output/1h/TiO2-dataset.txt", header = T, sep ="\t")
 
 ### load geneset
 wp2gene <- clusterProfiler::read.gmt("data/gmt_wp_Homo_sapiens.gmt")
@@ -192,7 +192,7 @@ comparisons <- c("caco2_L","caco2_H","SAE_L","SAE_H","THP1_L", "THP1_H")
 source("functions/enrichment.R")
 
 # set output destination
-path = "output/ORApw_cb_"
+path = "output/1h/ORApw_cb_"
 
 enrichment(wpid2gene,wpid2name, data, comparisons, 0.26, path)
 ```
@@ -244,13 +244,13 @@ source("functions/go_annotations.R")
 source("functions/ora_enrichment.R")
 
 # set output directory for ora_enrichtment function
-path = "output/"
+path = "output/1h/"
 
 for(i in go.terms) {
-  res <- go_annotations(go.term = i, biomart = biomart, output = paste("output/",gsub(":", "", i),".txt", sep=""))
+  res <- go_annotations(go.term = i, biomart = biomart, output = paste("output/1h/",gsub(":", "", i),".txt", sep=""))
   ora_enrichment(genes = res$entrezgene_id, wpid2gene = wpid2gene, wpid2name = wpid2name, path = path, prefix = paste0(gsub(":", "", i), "_ORA"))
   # update workflow data file
-  file.copy(from = paste("output/", gsub(":", "", i),".txt",sep=""), to = paste("data/",gsub(":", "", i),".txt",sep=""), overwrite = TRUE)
+  file.copy(from = paste("output/1h/", gsub(":", "", i),".txt",sep=""), to = paste("data/",gsub(":", "", i),".txt",sep=""), overwrite = TRUE)
 }
 
 ```
@@ -283,7 +283,7 @@ library(ggplot2)
 
 # Load ORA results for GO-terms - only select rows that are significant (adjusted p-value < 0.05)
 ```{r}
-path = paste0(getwd(), "/output")
+path = paste0(getwd(), "/output/1h")
 ls_GO <- list.files(path = path, pattern = "_ORA.txt")
 for (i in 1:length(ls_GO)){
   assign(paste0("GO", i), read.table(paste0(path,"/",ls_GO[i]), header = T, sep = "\t", quote = ""))
@@ -368,7 +368,7 @@ for (i in 1:nrow(sigORA)) {
 
 # Read pathway ORA results and only select rows where pvalue < 0.05
 ```{r}
-path = paste0(getwd(), "/output")
+path = paste0(getwd(), "/output/1h")
 ls_pw <- list.files(path = path, pattern = "ORApw_")
 for (i in 1:length(ls_pw)){
   assign(gsub(".txt", "", paste0(ls_pw[i])), read.table(paste0(path,"/",ls_pw[i]), header = T, sep = "\t", quote = ""))
@@ -384,7 +384,7 @@ ls_pw <- lapply(ls_pw, function(x){x[x$pvalue<0.05,]})
 source("functions/filteredPlot.R")
 
 # set output directory
-path = "output/"
+path = "output/1h/"
 
 dir.create(paste0(path, "nodesEdges"))
 
