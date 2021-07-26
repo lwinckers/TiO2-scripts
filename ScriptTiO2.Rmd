@@ -226,7 +226,7 @@ biomart <- biomaRt::useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl", hos
 
 # Define GO terms of interest
 ```{r}
-go.terms <- c("GO:0006915","GO:0006954","GO:0006974","GO:0006979")
+go.terms <- c("GO:0070265")
 ```
 
 # Load genesets
@@ -244,13 +244,13 @@ source("functions/go_annotations.R")
 source("functions/ora_enrichment.R")
 
 # set output directory for ora_enrichtment function
-path = "output/"
+path = "output/necrosis/"
 
 for(i in go.terms) {
-  res <- go_annotations(go.term = i, biomart = biomart, output = paste("output/",gsub(":", "", i),".txt", sep=""))
+  res <- go_annotations(go.term = i, biomart = biomart, output = paste("output/necrosis/",gsub(":", "", i),".txt", sep=""))
   ora_enrichment(genes = res$entrezgene_id, wpid2gene = wpid2gene, wpid2name = wpid2name, path = path, prefix = paste0(gsub(":", "", i), "_ORA"))
   # update workflow data file
-  file.copy(from = paste("output/", gsub(":", "", i),".txt",sep=""), to = paste("data/",gsub(":", "", i),".txt",sep=""), overwrite = TRUE)
+  file.copy(from = paste("output/necrosis/", gsub(":", "", i),".txt",sep=""), to = paste("data/",gsub(":", "", i),".txt",sep=""), overwrite = TRUE)
 }
 
 ```
@@ -283,87 +283,34 @@ library(ggplot2)
 
 # Load ORA results for GO-terms - only select rows that are significant (adjusted p-value < 0.05)
 ```{r}
-path = paste0(getwd(), "/output")
+path = paste0(getwd(), "/output/necrosis")
 ls_GO <- list.files(path = path, pattern = "_ORA.txt")
 for (i in 1:length(ls_GO)){
   assign(paste0("GO", i), read.table(paste0(path,"/",ls_GO[i]), header = T, sep = "\t", quote = ""))
 }
 
 GO1 <- GO1[GO1$p.adjust < 0.05,]
-GO2 <- GO2[GO2$p.adjust < 0.05,]
-GO3 <- GO3[GO3$p.adjust < 0.05,]
-GO4 <- GO4[GO4$p.adjust < 0.05,]
 
 for (i in 1:nrow(GO1)){
 GO1$Perc[i] <- (as.numeric(sub("\\/.*", "", GO1$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO1$BgRatio[i])))*100
 }
 
-for (i in 1:nrow(GO2)){
-GO2$Perc[i] <- (as.numeric(sub("\\/.*", "", GO2$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO2$BgRatio[i])))*100
-}
-
-for (i in 1:nrow(GO3)){
-GO3$Perc[i] <- (as.numeric(sub("\\/.*", "", GO3$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO3$BgRatio[i])))*100
-}
-
-for (i in 1:nrow(GO4)){
-GO4$Perc[i] <- (as.numeric(sub("\\/.*", "", GO4$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO4$BgRatio[i])))*100
-}
 
 GO150 <- GO1[GO1$Perc > 50,]
 GO160 <- GO1[GO1$Perc > 60,]
 GO170 <- GO1[GO1$Perc > 70,]
 GO180 <- GO1[GO1$Perc > 80,]
 
-GO250 <- GO2[GO2$Perc > 50,]
-GO260 <- GO2[GO2$Perc > 60,]
-GO270 <- GO2[GO2$Perc > 70,]
-GO280 <- GO2[GO2$Perc > 80,]
 
-GO350 <- GO3[GO3$Perc > 50,]
-GO360 <- GO3[GO3$Perc > 60,]
-GO370 <- GO3[GO3$Perc > 70,]
-GO380 <- GO3[GO3$Perc > 80,]
-
-GO450 <- GO4[GO4$Perc > 50,]
-GO460 <- GO4[GO4$Perc > 60,]
-GO470 <- GO4[GO4$Perc > 70,]
-GO480 <- GO4[GO4$Perc > 80,]
-
-
-write.table(GO150, "output/GO1.txt", quote = F, sep = "\t", row.names = F)
-write.table(GO250, "output/GO2.txt", quote = F, sep = "\t", row.names = F)
-write.table(GO350, "output/GO3.txt", quote = F, sep = "\t", row.names = F)
-write.table(GO450, "output/GO4.txt", quote = F, sep = "\t", row.names = F)
+write.table(GO150, "output/necrosis/GO1.txt", quote = F, sep = "\t", row.names = F)
 ```
 
 # Combine the significant results of all four GO-terms
 ```{r}
-sigORA <- rbind(GO150, GO250, GO350, GO450)
-sigORA <- as.data.frame(unique(sigORA[,c(1)]))
-colnames(sigORA) <- c("ID")
 
-for (i in 1:nrow(sigORA)) { 
-  if (sigORA$ID[i] %in% GO1$ID) {
-  sigORA$pid1[i] <- "1"
-} else {
-  sigORA$pid1[i] <- "0"
-}
-  if (sigORA$ID[i] %in% GO2$ID) {
-  sigORA$pid2[i] <- "1"
-} else {
-  sigORA$pid2[i] <- "0"
-} 
-  if (sigORA$ID[i] %in% GO3$ID) {
-  sigORA$pid3[i] <- "1"
-} else {
-  sigORA$pid3[i] <- "0"
-}
-  if (sigORA$ID[i] %in% GO4$ID) {
-  sigORA$pid4[i] <- "1"
-} else {
-  sigORA$pid4[i] <- "0"
-}}
+GO150$pid1 <- "1"
+sigORA <- GO150[,c(1,11)]
+
 ```
 
 # Read pathway ORA results and only select rows where pvalue < 0.05
@@ -384,7 +331,7 @@ ls_pw <- lapply(ls_pw, function(x){x[x$pvalue<0.05,]})
 source("functions/filteredPlot.R")
 
 # set output directory
-path = "output/"
+path = "output/necrosis/"
 
 dir.create(paste0(path, "nodesEdges"))
 
