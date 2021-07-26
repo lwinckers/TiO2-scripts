@@ -2,7 +2,7 @@
 ### Laurent Winckers, Maastricht University - Department of Bioinformatics BiGCaT
 ### 2021-06-28
 
-enrichment <- function(wpid2gene,wpid2name, data, comparisons, fccutoff) {
+enrichment <- function(wpid2gene,wpid2name, data, comparisons, fccutoff, path) {
   for (i in comparisons) {
     buffer <- data %>% dplyr::select(starts_with("entrez") | starts_with(i))
     
@@ -19,6 +19,6 @@ enrichment <- function(wpid2gene,wpid2name, data, comparisons, fccutoff) {
        TERM2GENE = wpid2gene,
        TERM2NAME = wpid2name)
      
-     write.table(ewp.combined, file = paste("output/ORApw_cb_", i, ".txt", sep=""), sep="\t", quote = F, row.names = F)
+     write.table(ewp.combined, file = paste(path, i, ".txt", sep=""), sep="\t", quote = F, row.names = F)
   }
 }

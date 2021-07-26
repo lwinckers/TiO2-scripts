@@ -190,7 +190,11 @@ wpid2name <- wp2gene %>% dplyr::select(wpid,name) #TERM2NAME
 comparisons <- c("caco2_L","caco2_H","SAE_L","SAE_H","THP1_L", "THP1_H")
 
 source("functions/enrichment.R")
-enrichment(wpid2gene,wpid2name, data, comparisons, 0.26)
+
+# set output destination
+path = "output/ORApw_cb_"
+
+enrichment(wpid2gene,wpid2name, data, comparisons, 0.26, path)
 ```
 
 
@@ -239,9 +243,12 @@ wpid2name <- wp2gene %>% dplyr::select(wpid,name) #TERM2NAME
 source("functions/go_annotations.R")
 source("functions/ora_enrichment.R")
 
+# set output directory for ora_enrichtment function
+path = "output/"
+
 for(i in go.terms) {
   res <- go_annotations(go.term = i, biomart = biomart, output = paste("output/",gsub(":", "", i),".txt", sep=""))
-  ora_enrichment(genes = res$entrezgene_id, wpid2gene = wpid2gene, wpid2name = wpid2name, prefix = paste0(gsub(":", "", i), "_ORA"))
+  ora_enrichment(genes = res$entrezgene_id, wpid2gene = wpid2gene, wpid2name = wpid2name, path = path, prefix = paste0(gsub(":", "", i), "_ORA"))
   # update workflow data file
   file.copy(from = paste("output/", gsub(":", "", i),".txt",sep=""), to = paste("data/",gsub(":", "", i),".txt",sep=""), overwrite = TRUE)
 }
@@ -376,10 +383,13 @@ ls_pw <- lapply(ls_pw, function(x){x[x$pvalue<0.05,]})
 ```{r}
 source("functions/filteredPlot.R")
 
-dir.create(paste0(getwd(), "/output/nodesEdges"))
+# set output directory
+path = "output/"
+
+dir.create(paste0(path, "nodesEdges"))
 
 for (i in 1:length(ls_pw)){
-filteredPlot(data = ls_pw[[i]], fileName = gsub("ORApw_", "", names(ls_pw[i])))
+filteredPlot(data = ls_pw[[i]], path, fileName = gsub("ORApw_", "", names(ls_pw[i])))
 }
 ```
 

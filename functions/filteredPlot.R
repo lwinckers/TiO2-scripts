@@ -2,18 +2,18 @@
 ### Laurent Winckers, Maastricht University - Department of Bioinformatics BiGCaT
 ### 2021-06-28
 
-filteredPlot <- function(data, fileName) {
+filteredPlot <- function(data, fileName, path) {
   data <- data
   data <- data[data$ID %in% sigORA$ID,]
-  write.table(data, paste0("output/", fileName, "_filtered.txt"), quote = F, sep = "\t", row.names = F)
+  write.table(data, paste0(path, fileName, "_filtered.txt"), quote = F, sep = "\t", row.names = F)
   
   s <- strsplit(data$geneID, split = "/")
   edges <- data.frame(WP = rep(data$ID, sapply(s, length)), Gene = unlist(s))
   nodes <- unique(data.frame(ID = c(edges[,1], edges[,2])))
   nodes$type <- ifelse(nodes$ID %like% "^WP" , 'Pathway', 'Gene')
   
-  write.table(nodes, paste0("output/nodesEdges/", fileName, "_nodes.txt"), quote = F, sep = "\t", row.names = F)
-  write.table(edges, paste0("output/nodesEdges/", fileName, "_edges.txt"), quote = F, sep = "\t", row.names = F)
+  write.table(nodes, paste0(path, "nodesEdges/", fileName, "_nodes.txt"), quote = F, sep = "\t", row.names = F)
+  write.table(edges, paste0(path, "nodesEdges/", fileName, "_edges.txt"), quote = F, sep = "\t", row.names = F)
   
   net <- graph_from_data_frame(d = edges, vertices = nodes, directed = F) 
 
@@ -45,7 +45,7 @@ filteredPlot <- function(data, fileName) {
   V(net)$label.color = "#000000"
   
   # SVG
-  svg(paste0("output/filteredPlot_",fileName,".svg"), width = 20, height = 20)
+  svg(paste0(path, "filteredPlot_", fileName,".svg"), width = 20, height = 20)
   plot(net, vertex.shape="pie", vertex.pie=values, vertex.pie.color=list(pal),
        edge.width = 2, vertex.size = ifelse(nodes$type == "Pathway", 6, 3), rescale = T, 
        vertex.label = NA,
