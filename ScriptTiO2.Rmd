@@ -226,7 +226,7 @@ biomart <- biomaRt::useEnsembl("ensembl", dataset = "hsapiens_gene_ensembl", hos
 
 # Define GO terms of interest
 ```{r}
-go.terms <- c("GO:0006915","GO:0006954","GO:0006974","GO:0006979")
+go.terms <- c("GO:0097193","GO:0097191")
 ```
 
 # Load genesets
@@ -291,8 +291,6 @@ for (i in 1:length(ls_GO)){
 
 GO1 <- GO1[GO1$p.adjust < 0.05,]
 GO2 <- GO2[GO2$p.adjust < 0.05,]
-GO3 <- GO3[GO3$p.adjust < 0.05,]
-GO4 <- GO4[GO4$p.adjust < 0.05,]
 
 for (i in 1:nrow(GO1)){
 GO1$Perc[i] <- (as.numeric(sub("\\/.*", "", GO1$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO1$BgRatio[i])))*100
@@ -302,13 +300,6 @@ for (i in 1:nrow(GO2)){
 GO2$Perc[i] <- (as.numeric(sub("\\/.*", "", GO2$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO2$BgRatio[i])))*100
 }
 
-for (i in 1:nrow(GO3)){
-GO3$Perc[i] <- (as.numeric(sub("\\/.*", "", GO3$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO3$BgRatio[i])))*100
-}
-
-for (i in 1:nrow(GO4)){
-GO4$Perc[i] <- (as.numeric(sub("\\/.*", "", GO4$GeneRatio[i])) / as.numeric(sub("\\/.*", "", GO4$BgRatio[i])))*100
-}
 
 GO150 <- GO1[GO1$Perc > 50,]
 GO160 <- GO1[GO1$Perc > 60,]
@@ -320,26 +311,14 @@ GO260 <- GO2[GO2$Perc > 60,]
 GO270 <- GO2[GO2$Perc > 70,]
 GO280 <- GO2[GO2$Perc > 80,]
 
-GO350 <- GO3[GO3$Perc > 50,]
-GO360 <- GO3[GO3$Perc > 60,]
-GO370 <- GO3[GO3$Perc > 70,]
-GO380 <- GO3[GO3$Perc > 80,]
-
-GO450 <- GO4[GO4$Perc > 50,]
-GO460 <- GO4[GO4$Perc > 60,]
-GO470 <- GO4[GO4$Perc > 70,]
-GO480 <- GO4[GO4$Perc > 80,]
-
 
 write.table(GO150, "output/GO1.txt", quote = F, sep = "\t", row.names = F)
 write.table(GO250, "output/GO2.txt", quote = F, sep = "\t", row.names = F)
-write.table(GO350, "output/GO3.txt", quote = F, sep = "\t", row.names = F)
-write.table(GO450, "output/GO4.txt", quote = F, sep = "\t", row.names = F)
 ```
 
 # Combine the significant results of all four GO-terms
 ```{r}
-sigORA <- rbind(GO150, GO250, GO350, GO450)
+sigORA <- rbind(GO150, GO250)
 sigORA <- as.data.frame(unique(sigORA[,c(1)]))
 colnames(sigORA) <- c("ID")
 
@@ -354,16 +333,7 @@ for (i in 1:nrow(sigORA)) {
 } else {
   sigORA$pid2[i] <- "0"
 } 
-  if (sigORA$ID[i] %in% GO3$ID) {
-  sigORA$pid3[i] <- "1"
-} else {
-  sigORA$pid3[i] <- "0"
 }
-  if (sigORA$ID[i] %in% GO4$ID) {
-  sigORA$pid4[i] <- "1"
-} else {
-  sigORA$pid4[i] <- "0"
-}}
 ```
 
 # Read pathway ORA results and only select rows where pvalue < 0.05
