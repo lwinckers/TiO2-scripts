@@ -192,7 +192,7 @@ comparisons <- c("caco2_L","caco2_H","SAE_L","SAE_H","THP1_L", "THP1_H")
 source("functions/enrichment.R")
 
 # set output destination
-path = "output/ORApw_cb_"
+path = "output/ext-int/ORApw_cb_"
 
 enrichment(wpid2gene,wpid2name, data, comparisons, 0.26, path)
 ```
@@ -244,13 +244,13 @@ source("functions/go_annotations.R")
 source("functions/ora_enrichment.R")
 
 # set output directory for ora_enrichtment function
-path = "output/"
+path = "output/ext-int/"
 
 for(i in go.terms) {
-  res <- go_annotations(go.term = i, biomart = biomart, output = paste("output/",gsub(":", "", i),".txt", sep=""))
+  res <- go_annotations(go.term = i, biomart = biomart, output = paste("output/ext-int/",gsub(":", "", i),".txt", sep=""))
   ora_enrichment(genes = res$entrezgene_id, wpid2gene = wpid2gene, wpid2name = wpid2name, path = path, prefix = paste0(gsub(":", "", i), "_ORA"))
   # update workflow data file
-  file.copy(from = paste("output/", gsub(":", "", i),".txt",sep=""), to = paste("data/",gsub(":", "", i),".txt",sep=""), overwrite = TRUE)
+  file.copy(from = paste("output/ext-int/", gsub(":", "", i),".txt",sep=""), to = paste("data/",gsub(":", "", i),".txt",sep=""), overwrite = TRUE)
 }
 
 ```
@@ -283,7 +283,7 @@ library(ggplot2)
 
 # Load ORA results for GO-terms - only select rows that are significant (adjusted p-value < 0.05)
 ```{r}
-path = paste0(getwd(), "/output")
+path = paste0(getwd(), "/output/ext-int")
 ls_GO <- list.files(path = path, pattern = "_ORA.txt")
 for (i in 1:length(ls_GO)){
   assign(paste0("GO", i), read.table(paste0(path,"/",ls_GO[i]), header = T, sep = "\t", quote = ""))
@@ -312,8 +312,8 @@ GO270 <- GO2[GO2$Perc > 70,]
 GO280 <- GO2[GO2$Perc > 80,]
 
 
-write.table(GO150, "output/GO1.txt", quote = F, sep = "\t", row.names = F)
-write.table(GO250, "output/GO2.txt", quote = F, sep = "\t", row.names = F)
+write.table(GO150, "output/ext-int/GO1.txt", quote = F, sep = "\t", row.names = F)
+write.table(GO250, "output/ext-int/GO2.txt", quote = F, sep = "\t", row.names = F)
 ```
 
 # Combine the significant results of all four GO-terms
@@ -338,7 +338,7 @@ for (i in 1:nrow(sigORA)) {
 
 # Read pathway ORA results and only select rows where pvalue < 0.05
 ```{r}
-path = paste0(getwd(), "/output")
+path = paste0(getwd(), "/output/ext-int")
 ls_pw <- list.files(path = path, pattern = "ORApw_")
 for (i in 1:length(ls_pw)){
   assign(gsub(".txt", "", paste0(ls_pw[i])), read.table(paste0(path,"/",ls_pw[i]), header = T, sep = "\t", quote = ""))
@@ -354,7 +354,7 @@ ls_pw <- lapply(ls_pw, function(x){x[x$pvalue<0.05,]})
 source("functions/filteredPlot.R")
 
 # set output directory
-path = "output/"
+path = "output/ext-int/"
 
 dir.create(paste0(path, "nodesEdges"))
 
