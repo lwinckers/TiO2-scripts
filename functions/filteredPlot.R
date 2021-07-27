@@ -29,10 +29,10 @@ filteredPlot <- function(data, fileName, path) {
     m <- (sapply(m, as.integer))
     #m <- as.data.frame(m)
     
-    k <- matrix(0, ncol = 2, nrow = (nrow(nodes)-nrow(data)))
+    k <- matrix(0, ncol = 4, nrow = (nrow(nodes)-nrow(data)))
     k <- data.frame(k)
     k$pid5 <- 1
-    colnames(k) <- c("pid1", "pid2", "pid5")
+    colnames(k) <- c("pid1", "pid2", "pid3", "pid4", "pid5")
     
     mm <- rbind(m,k)
     am <- data.matrix(mm)
@@ -40,7 +40,7 @@ filteredPlot <- function(data, fileName, path) {
     values <- lapply(seq_len(nrow(am)), function(i) am[i,])
     
     # create colorblind friendly color palette
-    pal <- c("#FFC20A", "#006CD1", "#D3D3D3")
+    pal <- c("#FFC20A", "#006CD1", "#D35FB7", "#D41159", "#D3D3D3")
     
     # increase font size
     V(net)$label.cex = 1.5
