@@ -24,4 +24,4 @@ The genes related to these four GO-terms are retrieved using the biomaRt package
 * #### Part 3 - Study the effect on toxicity related pathways
 The third part combines the results of the previous two parts. This part uses the results of the second part to filter those of the first part. This approach leads to toxicity related pathways which are used for further biological analysis. 
 
-Cite the code: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5039276.svg)](https://doi.org/10.5281/zenodo.5039276)
+Cite the code: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5137467.svg)](https://doi.org/10.5281/zenodo.5137467)
