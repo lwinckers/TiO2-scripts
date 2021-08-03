@@ -119,9 +119,9 @@ data <- merge(data, THP1_high, by = "ENSG_ID")
 
 # Data visualization (volcano plots)
 ```{r}
-cl <- EnhancedVolcano(data,title = "CACO2 10 μg/ml 24h", lab = data$hgnc_symbol, x = 'caco2_L_logFC',y = 'caco2_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
+cl <- EnhancedVolcano(data,title = "CACO2/HT29-MTX 10 μg/ml 24h", lab = data$hgnc_symbol, x = 'caco2_L_logFC',y = 'caco2_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
 
-ch <- EnhancedVolcano(data,title = "CACO2 100 μg/ml 24h", lab = data$hgnc_symbol, x = 'caco2_H_logFC',y = 'caco2_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
+ch <- EnhancedVolcano(data,title = "CACO2/HT29-MTX 100 μg/ml 24h", lab = data$hgnc_symbol, x = 'caco2_H_logFC',y = 'caco2_H_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
 
 sl <- EnhancedVolcano(data,title = "SAE 10 μg/ml 24h", lab = data$hgnc_symbol, x = 'SAE_L_logFC',y = 'SAE_L_pval', xlim = c(-2, 2), FCcutoff = 0.26, pCutoff = 0.05, col = c("grey30", "orange", "royalblue", "darkorange4"), selectLab = '', ylim = c(0, 13.5))
 
