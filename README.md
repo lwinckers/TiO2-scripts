@@ -25,3 +25,5 @@ The genes related to these four GO-terms are retrieved using the biomaRt package
 The third part combines the results of the previous two parts. This part uses the results of the second part to filter those of the first part. This approach leads to toxicity related pathways which are used for further biological analysis. 
 
 Cite the code: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5137467.svg)](https://doi.org/10.5281/zenodo.5137467)
+
+N.B. to run the workflow for the 1h time point the 1h repository can be used: [![DOI](https://zenodo.org/badge/392441833.svg)](https://zenodo.org/badge/latestdoi/392441833)
